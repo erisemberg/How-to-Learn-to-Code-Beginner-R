@@ -4,6 +4,13 @@ author: "Spencer Nystrom & Jamshaid Shahir"
 output: github_document
 ---
 
+## Notes from 5/27 meeting 
+- Before day 1, send out an email with instructions on how to download R and RStudio. Tell them to reach out to us with any questions and we’ll spend the first few minutes of class troubleshooting.
+- Discuss difference between R language and R Studio IDE
+- Discuss different types of files (R script, Rmd), how to create them and when you would use each
+- Load a package (probably include in Rmd code)
+- Note that we’ll assign homeworks but won’t grade them / will hand out keys and if people have questions we can go over them in the first 10 minnutes of class
+
 ## Class Intro
  - Student introductions
  - class expectations:
