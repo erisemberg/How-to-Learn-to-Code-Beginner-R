@@ -2,7 +2,7 @@
 ## Brooke Felsheim, Elena Kharitonova & Ellen Risemberg
 
 
-Classes will be run using [Rstudio.cloud](rstudio.cloud). Students are expected to provide their own laptop.
+Classes will be run using [Rstudio](https://www.rstudio.com/products/rstudio/download/#download). Students are expected to provide their own laptop.
 
 ### 2019 Schedule:
 |Day | Subject | Homework |
