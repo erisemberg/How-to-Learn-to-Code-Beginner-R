@@ -1,9 +1,8 @@
 # Introduction to R Lessons
-## Spencer Nystrom & Jamshaid Shahir
+## Brooke Felsheim, Elena Kharitonova & Ellen Risemberg
 
 
-Classes will be run using [Rstudio.cloud](rstudio.cloud). Students are expected
-to provide their own laptop.
+Classes will be run using [Rstudio.cloud](rstudio.cloud). Students are expected to provide their own laptop.
 
 ### 2019 Schedule:
 |Day | Subject | Homework |
