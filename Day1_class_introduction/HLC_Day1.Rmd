@@ -3,8 +3,8 @@ title: "HLC R Class - Day 1"
 author: "Brooke Felsheim, Ellen Risemberg, Elena Kharitonova"
 date: "6/6/2022"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
