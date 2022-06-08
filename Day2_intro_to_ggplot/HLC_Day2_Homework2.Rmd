@@ -1,0 +1,63 @@
+---
+title: "Homework 2"
+author: "Elena Kharitonova, Brooke Felsheim, Ellen Risemberg"
+date: "6/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# HLC Homework 2: Plotting
+
+To check your understanding of `ggplot` and topics covered in today's lesson,
+replicate the plot below of data from the Gapminder dataset to the best of your
+ability. Make use of your resources the HLC Day2 R markdown document, the 
+`ggplot2` documentation, R for Data Science, and Google. Create a new R script 
+or R markdown document of your to run the code for your answer.
+
+First, load the `gapminder` and `ggplot` libraries into R
+ 
+```{r}
+library(gapminder)
+library(ggplot2)
+```
+
+This plot uses the following subset of the Gapminder data:
+ 
+```{r}
+finalExampleData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
+```
+
+### Hints:
+
+This plot has:     
+
+ - Facets to show the different years. Try looking at the help page for `facet_wrap`.
+ - A linear trendline
+ - A log10 scale x-axis
+ - Altered transparency of the points
+ - Renamed legend titles
+ - Axis text resized to 12
+ - Axis title text resized to 14
+ - Facet titles resized to 14
+ 
+
+```{r gapminder plot, fig.height= 4, fig.width= 9, echo = F, message = F}
+ggplot(finalExampleData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(size = pop, color = continent), alpha = 0.5) + 
+  geom_smooth(method = "lm", se = FALSE, color = "black", lty = 2) +
+  facet_wrap(~year) + 
+  scale_x_log10() + 
+  ylab("Life Expectancy") + 
+  xlab("GDP per capita") + 
+  guides(color = guide_legend("Continent"), 
+         size = guide_legend("Population")) +
+  ggtitle("Life Expectancy Increases independently of GDP per cap") +
+  theme(strip.text.x = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14))
+```
+
