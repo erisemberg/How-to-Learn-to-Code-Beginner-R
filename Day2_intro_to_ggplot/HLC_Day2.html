@@ -181,7 +181,7 @@ pre code {
 </ol>
 <div id="load-data-into-r" class="section level2">
 <h2>Load data into R</h2>
-<p>For today’s lecture, we will be using a dataset sourced from the <a href="https://www.gapminder.org/">Gapminder Foundation</a> that contains data on life expectency, GDP per capita, and population by country. This dataset is available to use in R via a package called `gapminder.</p>
+<p>For today’s lecture, we will be using a dataset sourced from the <a href="https://www.gapminder.org/">Gapminder Foundation</a> that contains data on life expectency, GDP per capita, and population by country. This dataset is available to use in R via a package called <code>gapminder</code>.</p>
 <p>First, we will want to install the <code>gapminder</code> dataset so we can access this data.</p>
 <pre class="r"><code>install.packages(&quot;gapminder&quot;)</code></pre>
 <p>Remember from last week that before a package can be used, it must be loaded to the current R environment with the <code>library</code> command. We need to do this once at the beginning of each new R session.</p>
@@ -195,11 +195,11 @@ usa &lt;- dplyr::filter(gapminder, country == &quot;United States&quot;)</code><
 <p>Recall last class’s lesson on ggplot. Do your best to complete the following exercises, referencing previous material or googling a solution as needed.</p>
 <div id="exercise-1" class="section level3">
 <h3>Exercise 1</h3>
-<p>Create a scatterplot of life expectancy (lifeExp) over time (year) in the code chunk below.</p>
+<p>Create a scatterplot of life expectancy (<code>lifeExp</code>) over time (<code>year</code>) in the code chunk below.</p>
 </div>
 <div id="exercise-2" class="section level3">
 <h3>Exercise 2</h3>
-<p>Change the point shape to diamonds and increase the point size to 5 in the code chunk below. <strong>Hint:</strong> Recall that setting parameters not-informed by data is done outside of an aes() call.</p>
+<p>Change the point shape to diamonds and increase the point size to 5 in the code chunk below. Hint: Recall that setting parameters not-informed by data is done outside of an <code>aes()</code> call.</p>
 </div>
 </div>
 <div id="layered-grammar-of-graphics" class="section level2">

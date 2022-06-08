@@ -21,7 +21,7 @@ By the end of today's class, you should be able to:
 
 ## Load data into R
 
-For today's lecture, we will be using a dataset sourced from the [Gapminder Foundation](https://www.gapminder.org/) that contains data on life expectency, GDP per capita, and population by country. This dataset is available to use in R via a package called `gapminder.     
+For today's lecture, we will be using a dataset sourced from the [Gapminder Foundation](https://www.gapminder.org/) that contains data on life expectency, GDP per capita, and population by country. This dataset is available to use in R via a package called `gapminder`.     
 
 First, we will want to install the `gapminder` dataset so we can access this data.
 
@@ -52,7 +52,7 @@ Recall last class's lesson on ggplot. Do your best to complete the following exe
 
 ### Exercise 1
 
-Create a scatterplot of life expectancy (lifeExp) over time (year) in the code chunk below.
+Create a scatterplot of life expectancy (`lifeExp`) over time (`year`) in the code chunk below.
 
 ```{r}
 
@@ -60,7 +60,7 @@ Create a scatterplot of life expectancy (lifeExp) over time (year) in the code c
 
 ### Exercise 2
 
-Change the point shape to diamonds and increase the point size to 5 in the code chunk below. **Hint:** Recall that setting parameters not-informed by data is done outside of an aes() call.
+Change the point shape to diamonds and increase the point size to 5 in the code chunk below. Hint: Recall that setting parameters not-informed by data is done outside of an `aes()` call.
 
 ```{r}
 
