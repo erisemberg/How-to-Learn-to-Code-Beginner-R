@@ -68,8 +68,9 @@ Change the point shape to diamonds and increase the point size to 5 in the code 
 
 ## Layered grammar of graphics
 
-ggplot adds plot components in layers. The order of addition matters! Let's add a line to
-our scatterplot. Observe that the line is plotted over the points.
+ggplot adds plot components in layers. The order of addition matters!      
+
+Let's add a line to our scatterplot. Observe that the line is plotted over the points.
 
 We've increased the line thickness with the `size` argument so it renders well on a projector.
 ```{r}
@@ -116,7 +117,7 @@ ggplot(iris, aes(Sepal.Width, Petal.Width)) +
 
 ggplot interprets categorical variables as `factors` in order to assign their order in the legend, and the color on the plot.
 
-### Factors are *ordered categorical data* with "levels".   
+### Factors are *ordered categorical data* with "levels"   
 
 By default, the levels are in alphabetical order.
 
