@@ -12,52 +12,236 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # HLC Homework 2: Plotting
 
-To check your understanding of `ggplot` and topics covered in today's lesson,
-replicate the plot below of data from the Gapminder dataset to the best of your
-ability. Make use of your resources the HLC Day2 R markdown document, the 
-`ggplot2` documentation, R for Data Science, and Google. Create a new R script 
-or R markdown document of your to run the code for your answer.
+For the second homework, your goal will to replicate the below plot to the best
+of your ability using the `gapminder` data frame and `ggplot2`.
 
-First, load the `gapminder` and `ggplot` libraries into R
- 
-```{r}
+```{r echo = FALSE, message = FALSE}
 library(gapminder)
 library(ggplot2)
-```
-
-This plot uses the following subset of the Gapminder data:
- 
-```{r}
-finalExampleData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
-```
-
-### Hints:
-
-This plot has:     
-
- - Facets to show the different years. Try looking at the help page for `facet_wrap`.
- - A linear trendline
- - A log10 scale x-axis
- - Altered transparency of the points
- - Renamed legend titles
- - Axis text resized to 12
- - Axis title text resized to 14
- - Facet titles resized to 14
- 
-
-```{r gapminder plot, fig.height= 4, fig.width= 9, echo = F, message = F}
-ggplot(finalExampleData, aes(x = gdpPercap, y = lifeExp)) + 
-  geom_point(aes(size = pop, color = continent), alpha = 0.5) + 
-  geom_smooth(method = "lm", se = FALSE, color = "black", lty = 2) +
-  facet_wrap(~year) + 
-  scale_x_log10() + 
-  ylab("Life Expectancy") + 
+homeworkData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+ylab("Life expectancy") + 
   xlab("GDP per capita") + 
-  guides(color = guide_legend("Continent"), 
-         size = guide_legend("Population")) +
-  ggtitle("Life Expectancy Increases independently of GDP per cap") +
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap") +
+  facet_wrap(vars(year)) + 
+  theme_bw() +
   theme(strip.text.x = element_text(size = 14),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14))
 ```
+
+This plot is more complicated than any of the examples we have shown during
+class, so we will provide hints and walk through how to replicate it in steps.
+
+In addition to the hints that will be given, make use of your resources from the 
+HLC markdown documents we have gone over in class, [R for data science](https://r4ds.had.co.nz/data-visualisation.html), and Google. Remember
+that you can access the R documentation for any function by typing `?` before
+the name of the function in the R console, or by searching for the function in the 
+search box of the "Help" tab of the bottom right corner of R Studio.
+
+## Steps for creating the plot
+
+### Step 1
+
+Create your own new R markdown document (.Rmd file) or R script (.R file) to run 
+the code for this homework response. If you are using a .Rmd file, remember that 
+you must run R code in the gray code blocks. We went over how to create these
+during class.
+
+### Step 2
+
+Load the `gapminder` and `ggplot2` package contents into R. Remember that to load
+package contents into R, we use the `library` function.
+
+### Step 3
+
+Run the below code to subset of the Gapminder data for the years 1952 and 2007. 
+This will be the data frame that you supply to `ggplot()` in later steps. We
+will cover subsetting data frames in more detail next week.
+ 
+```{r}
+homeworkData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
+```
+
+### Step 4
+
+We will be plotting life expectancy (`lifeExp`) vs GDP per capita (`gdpPercap`) 
+for this data. Start by replicating the below plot, referencing the examples we 
+covered during class as needed.
+
+```{r echo=FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point()
+```
+
+### Step 5
+
+Now, let's color the points by continent and scale the size of the points by
+population. Again, reference the examples where we did this in class as needed. 
+
+```{r echo=FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop))
+```
+
+### Step 6
+
+Notice that many of the points are overlapping each other. If we would like to
+see where points overlap, we can alter the transparency with the `alpha` parameter.
+`alpha` is a value that ranges from 0 (fully transparent) to 1 (fully opaque).
+In the `geom_point()` part of your code, supply `alpha = 0.5` outside of the
+mapping `aes()` specification. Your plot should now look like the one below.
+
+```{r echo=FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5)
+```
+
+### Step 7
+
+In the above plot, you may have noticed that the GDP per capita data on the x-axis
+is mostly concentrated towards 0, with some large data outliers. It might be
+better to transform the y-axis into a log scale. Let's set a log10 scale x-axis
+for our plot. Hint: the function `scale_x_log10()` may be useful here. 
+
+Your plot should now look like this:
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10()
+```
+
+### Step 8
+
+It looks like there is a linear trend between life expectancy and GDP per capita.
+We can add a linear trendline to our plot to show this relationship. To do this,
+we will want to make use of the `geom_smooth` function. You can read more about 
+how to use `geom_smooth` to plot a linear trendline [here](https://www.statology.org/ggplot-trendline/) and by looking at the R
+documentation for this function. Bonus: hide the shaded confidence region with
+the `se` parameter, change the line color to black, and set the line type to 
+be dashed.
+
+Your plot will now look like this:
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed")
+```
+
+You may get a message in R that says: `geom_smooth() using formula 'y ~ x'`.
+You can ignore this.
+
+### Step 9
+
+Notice that all of our labels by default are using the column name. We want to
+make these more descriptive. Let's change the x-axis label to "GDP per capita" 
+and the y-axis label to "Life expectancy". Let's also add a title that says "Life 
+expectancy increases independently of GDP per cap". We discussed how to do this 
+in class.
+
+We also would like to change the legend labels to "Continent" and "Population". 
+Hint: there are three different ways to do this described [here](https://r-charts.com/ggplot2/legend/#title).
+
+Your plot should now look like this:
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+ylab("Life expectancy") + 
+  xlab("GDP per capita") + 
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap")
+```
+
+### Step 10
+
+If you remember from the beginning, we filtered the `gapminder` data set to only
+contain data from the years 1952 and 2007. We want to see if the trend of life
+expectancy by GDP per capita is different between these two years by plotting 
+the data for each year side-by-side. We can do this by using `facets` to show
+the different years. We haven't covered this in class, but try looking at the R
+help page for the `facet_wrap` function to make your plot look like the one below:
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+ylab("Life expectancy") + 
+  xlab("GDP per capita") + 
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap") +
+  facet_wrap(vars(year))
+```
+
+### Step 11
+
+`ggplot2` has a theme system which allows you to have control over the non-data 
+elements of your plot such as ticks, panel strips, and backgrounds. Themes can 
+help you make the plot aesthetically pleasing or match an existing style guide. 
+By default, `ggplot2` uses a theme called `theme_grey()`. This theme gives us the
+gray background we've been seeing in our plot. We can change this theme to any
+one of the `ggplot2` inbuilt complete themes which controll all non-data display.
+
+Try experimenting with the theme. Run `?theme_grey` in the R console to see a
+help page with the complete list of theme options. 
+
+To match the plot below, change the theme to `theme_bw()`.
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+ylab("Life expectancy") + 
+  xlab("GDP per capita") + 
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap") +
+  facet_wrap(vars(year)) + 
+  theme_bw()
+```
+
+### Step 12
+
+Finally, we can use the `theme()` function if we want to tweak components of our
+existing theme. One common component that you may want to change is the text size. 
+Add the below code to your ggplot to resize the axis text to 12, the axis title 
+text to 14, and the facet title text to 14.
+
+```
+theme(strip.text.x = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14))
+```
+
+Your plot should now look like this:
+
+```{r echo = FALSE, message = FALSE}
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+ylab("Life expectancy") + 
+  xlab("GDP per capita") + 
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap") +
+  facet_wrap(vars(year)) + 
+  theme_bw() +
+  theme(strip.text.x = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14))
+```
+
+Your plot should now match the one at the beginning of the document! If you
+couldn't get everything to match perfectly, don't worry. We will go over this in
+class on Tuesday.
 
