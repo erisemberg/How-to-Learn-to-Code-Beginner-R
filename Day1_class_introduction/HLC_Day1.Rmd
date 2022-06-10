@@ -71,13 +71,18 @@ For the purposes of our instruction, R Markdown allows us to include code chunks
 
 "My name is Spencer"
 ```
+```{r}
+2+7
+
+```
 
 ## You can store things in **variables** with `<-`
 
 You can quickly type `<-` with `Alt + -` in Rstudio
 
 ```{r}
-myName <- "Spencer"
+myName <- "Elena"
+myName = "Elena"
 ```
 
 ## R will spit it back out when you call it
@@ -110,6 +115,7 @@ myNumber + 10
 The most simple data structure available in R is a vector. You can make vectors of numeric values, logical values, and character strings using the `c()` function. For example:
 
 ```{r}
+c(5,6,7)
 c(1, 2, 3)
 c(TRUE, TRUE, FALSE)
 c("a", "b", "c")
@@ -122,6 +128,14 @@ x <- c(1, 2, 5)
 y <- c(3, 4, 6)
 z <- c(x, y)
 z
+
+1+3
+4+2
+5+6
+
+x+y
+x*2
+
 ```
 
 An element of a vector can be selected using `[]`. The `[` operator can also take a vector as the argument. For example you can select the first and third elements:
@@ -136,9 +150,17 @@ z[c(3,1)]
 Data frames are likely the data structure you will used most in your analyses. A data frame is a special kind of list that stores same-length vectors of different classes. You create data frames using the `data.frame` function. The example below shows this by combining a numeric and a character vector into a data frame. It uses the `:` operator, which will create a vector containing all integers from 1 to 3. 
 
 ```{r}
-df1 <- data.frame(x = 1:3, y = c("a", "b", "c"))
+df1 <- data.frame(x = c(1,2,3), y = c("a", "b", "c"))
 df1
 class(df1)
+
+
+df2<- data.frame(Column_1 = c("random", "vector"), column2 = c("other", "vector"), file = c(3,5) )
+
+df2<- data.frame(Column_1 = c("random", "vector"), column2 = c("other", "vector"), file = c(3,5) )
+
+
+df2
 ```
 
 `iris` is a built-in dataset that we will use today to cover some basic. It
@@ -151,6 +173,8 @@ iris
 
 The `head()` function will print the first 6 rows
 ```{r}
+head(iris)
+
 head(iris)
 ```
 
@@ -172,11 +196,14 @@ str(iris)
 Individual columns can be referenced in R by using `$` to call a column by name.
 ```{r}
 iris$Sepal.Length
+iris$Sepal.Length
 ```
 
 Similarly, to a vector so you can subset a data frame using `[]`, but keep in mind data frames have both rows and columns!
 
 ```{r}
+
+
 #dataframe[row, column]
 
 ## Since Sepal.Length is the first column
@@ -199,10 +226,37 @@ iris$Sepal.Length * 2
 
 ## Exercise (3 minutes):
  - print all values of `Petal.Width` to the terminal
+```{r}
+iris$Petal.Width
+```
+ 
+ 
  - You can ask for help in R using the `?` function. Try running `?mean` to find out what the `mean()` function does.
  - what is the mean value of `Petal.Width`?
+```{r}
+mean(x = iris$Petal.Width)
+```
+ 
+ 
+ 
  - what is the sum of all `Petal.Width`? (HINT: guess the function name, or google for it!)
+```{r}
+sum(iris$Petal.Width)
+```
+ 
+ 
+ 
+ 
  - what is the standard deviation of `Sepal.Length`?
+ 
+ 
+ 
+ - what is the entry that is in the second row and 3rd column of iris
+```{r}
+iris[2,3]
+
+iris[3,2] # third row, second column
+```
 
 
 
@@ -214,10 +268,10 @@ In order to be able to use a package, you first need to install (aka download) i
 
 ```{r, eval=F}
 # This installs multiple packages that help manipulate & plot data:
-#install.packages("tidyverse")
+install.packages("tidyverse")
 
 # This installs two packages that contain example datasets we will use later in the course:
-#install.packages(c("gapminder", "titanic"))
+install.packages(c("gapminder", "titanic"))
 ```
  
 
@@ -257,7 +311,7 @@ ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
 Plots can be saved to variables just like before
 ```{r}
 sepal.vs.petal <- ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
-  geom_point()
+  geom_line(color = "blue")
 ```
 
 ```{r}
@@ -283,8 +337,9 @@ A really helpful cheatsheet detailing different aspects of ggplot can be found [
   
 ```{r, eval=F, include =F}
 # Correct answer:
-ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
-  geom_point(aes(color = Species))
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width, color = Species)) +
+  geom_point()
+
 ```
 
 ### Question 2:
@@ -296,8 +351,8 @@ ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
 
 ```{r, eval = F, include = F, echo=F}
 # Correct answer:
-ggplot(data = iris, mapping = aes(x = Species, y = Petal.Width)) +
-  geom_boxplot(aes(fill = Species)) 
+ggplot(data = iris, mapping = aes(fill = Species, y = Petal.Width)) +
+  geom_boxplot() 
 ```
 
 ## More reading
