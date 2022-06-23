@@ -1,0 +1,72 @@
+---
+title: "Homework 3"
+author: "Elena Kharitonova, Brooke Felsheim, Ellen Risemberg"
+date: '2022-06-16'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework
+
+For this exercise, you will go through a short analysis and workflow using BBS data. BBS observers record the weather conditions during their observations, since many birds are less active on days that are rainy or windy. Observations that meet survey quality standards are considered more reliable than those that don't. The BBS provides a weather dataset that contains data about whether observations (combinations of route and year) meet their quality standards. 
+
+First, load the tidyverse package, which will make the dplyr functions available to us.
+```{r}
+library(tidyverse)
+```
+
+
+Read in the weather table, found in the lesson repo. 
+
+```{r}
+weather <- read.csv("https://raw.githubusercontent.com/gdicecco/HLC-data-public/master/bbs_weather_20170712.csv")
+```
+
+### Question 1: Create a new column in `weather` for `stateroute`, so the observations can be matched to observations in `counts`. 
+
+* Hint: This is how you made `stateroute2` in class today.
+
+```{r}
+
+```
+
+The quality standards variable is called `runtype` in `weather` (`runtype` = 1 indicates a good quality observation). 
+
+### Question 2: Filter `weather` to remove observations that don't meet the BBS quality standards (aka runtype equals 1 ) and are within the time window of 2000 - 2017. 
+```{r}
+
+```
+
+
+### Question 3: Use that table to remove unreliable observations from `counts`. 
+
+* Hint: You want to keep only the observations in `counts` that have a stateroute that is also a state route in the `weather` data frame that meets the BBS quality observations.
+
+```{r}
+
+```
+
+Recall (or refer back to) the previous lesson on `ggplot`, and make the following plots to explore the BBS data for North Carolina with your filtered `counts` data:
+
+### Question 4: Create a line plot of the total number of individual birds observed per year across North Carolina using only the reliable observations of `counts`
+
+* Hint: To do this, you will need to first sum over the `speciestotal` for each year
+
+```{r}
+
+```
+
+
+## Question 5: First, determine how many species and how many total individuals were observed at each route each year. Then, create a scatterplot showing how the number of species observed is related to the number of individuals (number of species vs. number of individuals), where each point is a unique observation of route/year.
+
+* Hint: Your group that you create will be based on the `year` and the `stateroute`
+
+* Hint: The total number of individuals is just the number of observations in each group, the total number of species is the sum of `speciestotal` for each group.
+
+```{r}
+
+```
+
