@@ -1,0 +1,402 @@
+---
+title: "Functions and control flow"
+author: "Ellen Risemberg"
+date: "June 21, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Functions
+
+So far we've been using a lot of functions that exist within R. Now we'll learn how to build our own function.
+
+
+```{r eval=FALSE}
+myfunction <- function(arg1, arg2, ...) {
+  
+  #do some stuff
+  return(object)
+  
+}
+```
+
+Make a simple function that just returns the argument that it is given.
+
+```{r}
+first_function <- function (x) {
+  
+  return(x)
+  
+}
+```
+
+Now if you pass a value to `first_function` it should return that value:
+
+```{r}
+first_function(9)
+```
+
+A function that only returns the given value is not useful, but it does illustrate how you can add functions to your environment. Now make a function that squares a value and then adds one to it.
+
+```{r}
+second_function <- function(x) {
+  ans <- x^2 + 1
+  return(ans)
+  
+}
+
+second_function(9)
+```
+
+
+#### Exercise 1
+
+Write a function that converts a Fahrenheit temperature to Kelvin (remember that K = 5/9*(F - 32) + 273.15).
+
+```{r}
+f2k <- function(f) {
+  k <- (5/9)*(f - 32) + 273.15
+  return(k)
+}
+
+f2k(60)
+```
+
+#### Exercise 2
+
+Suppose we wanted to look at the Gapminder dataset and calculate GDP. Write a function to do that, returning the dataset with the new GDP column
+
+Tip: first, load `dplyr` and `gapminder`. 
+
+```{r}
+library(dplyr)
+library(gapminder)
+```
+
+Solution:
+
+```{r}
+getGDP <- function(data){
+  new_data <- mutate(data, GDP=gdpPercap*pop)
+  return(new_data)
+}
+
+getGDP(gapminder)
+```
+
+Alternate solution:
+
+```{r}
+# Makes general function that computes GDP from 2 columns, which can be passed to mutate
+
+getGDP2 <- function(data){
+  gdp <- data$gdpPercap * data$pop
+  return(gdp)
+}
+
+# Returns a vector of GDPs
+getGDP2(gapminder)
+
+# Inside mutate will capture the vector in a column named `GDP`
+gapminder %>% 
+  dplyr::mutate(GDP = getGDP2(.))
+
+```
+
+
+## Control flow 
+
+Flow of control through any given function is implemented with various **control structures**. There are three basic types of control structures:
+1. Sequential: the default mode. Sequential execution of code, one line after another. 
+2. Selection: used for decisions and branching, such as choosing between two or more alternative paths. 
+  * `if` statements
+  * `if/else` statements
+3. Repetition: used for looping, i.e. repeating a piece of code multiple times. 
+  * `for` loops
+  * `while` loops
+  * `do/while` loops
+
+### For loops 
+
+For loops are used to iterate through elements in a vector, repeating the same block of code each time. They take the basic form:
+
+```{r, eval=FALSE}
+for(i in vector) {
+  Do some operation to each element of the vector
+}
+```
+
+Example:
+
+```{r}
+years <- c(2010,2011,2012,2013,2014,2015)
+
+for (year in years){
+  print(paste("The year is", year))
+}
+```
+
+We can also store the output of the code block evaluated in each iteration of the for loop:
+
+```{r}
+output <- c() # create an empty vector
+
+for (year in years){
+  output <- c(output, paste("The year is", year)) # add to the empty vector each iteration
+}
+
+output
+```
+
+We can also do this another way by iterating through the indices with the `length` function. This is rather common in more traditional programming languages, such as MATLAB, C++, and Java.
+
+```{r}
+output <- c() # re-initialize empty vector
+
+for (i in 1:length(years)){
+  output[i] <- paste("The year is", years[i]) # add to the empty vector each iteration
+}
+
+output
+```
+
+**Note**: you may hear people say that you "shouldn't" use `for` loops in R (vs other languages). In general this is not true and you will probably use `for` loops frequently; however, depending on the problem there is sometimes a more efficient option:
+1. `apply` family of functions (discussed later)
+2. Vector-based methods, aka *vectorization* (discussed now) 
+
+A simple example comparing for loop vs vectorization in performing vector addition.
+
+Create two vectors of random data:
+
+```{r}
+a <- runif(n = 100, min = 0, max = 1)
+b <- runif(n = 100, min = 0, max = 1)
+```
+
+Using for loop:
+
+```{r}
+sum <- vector()
+
+for (i in 1:length(a)){
+  sum[i] = a[i] + b[i]
+}
+
+sum
+```
+
+Using a vector-based method:
+
+```{r}
+sum <- a + b
+
+sum
+```
+
+
+#### Exercise 3
+
+Use a for loop to print out all the countries in the Americas from Gapminder (hint: use `filter` to just extract the American countries; also, how can you avoid repeats?)
+
+```{r}
+us_Gapminder <- filter(gapminder, continent == "Americas" & year == 2002)
+
+for (i in 1:length(us_Gapminder$country)){
+  print(us_Gapminder$country[i])
+}
+```
+
+The levels tacked on make our output a little hard to read. We can suppress those by using the `as.character` function.
+
+```{r}
+for (i in 1:length(us_Gapminder$country)){
+  print(as.character(us_Gapminder$country[i]))
+}
+```
+
+If you want to keep the output of a for loop, it can be more efficient to use a function from the `apply` family. We'll go over this later. 
+
+
+#### Exercise 4
+
+Use the following vector `years` and the function `printYear` inside a for loop to print a new line for each year in `years`.
+
+```{r}
+years <- c(2010,2011,2012,2013,2014,2015)
+
+printYear <- function(year) {
+  print(paste("The year is", year))
+}
+```
+
+**Solution**:
+
+```{r}
+for (year in years){
+  printYear(year)
+}
+```
+
+
+### If and if/else statements
+
+Like `for` loops, `if` and `if/else` statements are an important part of programming in all languages. They are used for decision making. 
+* `if` statements are used to determine whether or not a code block is executed. 
+* `if/else` statements are used to choose between 2 or more alternate paths. 
+
+The code within an `if` or `if/else` statement is executed if the specified condition is TRUE. 
+
+In R, you create an `if/else` statement with the following syntax:
+
+```{r, eval=FALSE}
+if (logical statment) { do something } else  { do something different } 
+```
+
+For example:
+
+```{r}
+if (1 > 2){ 
+  print("TRUE")
+} else {
+  print("FALSE")
+}
+```
+
+The condition following the `if` statement is a conditional that evaluates to a `boolean` value (either TRUE or FALSE). So you could equivalently use this code: 
+
+```{r}
+print(1 > 2)
+```
+
+Not all `if/else` statements have to have an `else` clause. By default, if the condition evaluates to FALSE and no `else` statement is given, R does nothing. This is just an `if` statement. 
+
+```{r}
+x <- 1000
+if (x > 100) print("'x' is greater than 100")
+```
+
+```{r}
+x <- 10
+if (x > 100) print("'x' is greater than 100")
+```
+
+If/else statements can also be nested:
+
+```{r}
+y <- 25
+
+if (y < 100) {
+  if (y > 10) {
+    print("10 < y < 100")
+  } else {
+    print("y < 10 or y > 100")
+  }
+} else {
+  print("y < 10 or y > 100")
+}
+```
+
+
+#### Exercise 5
+
+Without using `filter`, loop through the entire Gapminder dataset, and just print out countries in the American continent. For simplicity and to avoid repeats, just use data from the year 2002: `gap2002 = filter(gapminder, year==2002)`
+
+```{r}
+gap2002 <- filter(gapminder, year==2002)
+
+for (i in 1:length(gap2002$continent))
+{
+  if (gap2002$continent[i] == "Americas") 
+  {
+    print(as.character(gap2002$country[i]))
+  }
+}
+```
+
+#### Bonus
+
+Write a function that takes as input a gapminder dataset from 2002 and a specified continent, and prints out the list of countries.
+
+```{r}
+printCty <- function(data, cont)
+{
+
+  for (i in 1:length(data$continent))
+  {
+    if (data$continent[i] == cont) 
+    {
+      print(as.character(data$country[i]))
+    }
+  }
+}
+
+printCty(gap2002, "Americas")
+printCty(gap2002, "Africa")
+printCty(gap2002, "Asia")
+```
+
+
+### Apply family functions
+
+Apply family functions similarly perform operations iteratively on slices of data (rows in a matrix, elements in a list). For many operations, the apply family can be more efficient than a for loop. You can read on about apply functions at [Data Camp](https://www.datacamp.com/community/tutorials/r-tutorial-apply-family#family).
+
+We can use `sapply`, which applies a function over a list or vector and returns the output as a *vector*, to get output as the above `for` loop:
+
+```{r}
+years <- c(2010,2011,2012,2013,2014,2015)
+sapply(years, function(x) paste("The year is", x))
+```
+
+We can use `lapply`, which applies a function over a list or vector and returns the output as a *list*.
+
+```{r}
+years <- c(2010,2011,2012,2013,2014,2015)
+lapply(years, function(x) paste("The year is", x))
+```
+
+#### Exercise 6
+
+Repeat the Gapminder exercise (print out all countries in the Americas) using `sapply` and `lapply`
+
+```{r}
+us_Gapminder <- filter(gapminder, continent == "Americas" & year == 2002)
+
+sapply(as.character(us_Gapminder$country), function(x) x)
+lapply(as.character(us_Gapminder$country), function(x) x)
+```
+
+
+## A note on scope 
+
+Scope is a very important concept in programming. It indicates a variable's "lifetime" in the program and defines **where variables can be accessed or referenced**.
+
+To illustrate this, consider this function which adds 5 to the argument `x`. 
+
+```{r}
+add5 <- function(x){
+  x <- x+5
+  print(x)
+}
+```
+
+We can set a variable and call the function on that variable: 
+
+```{r}
+num <- 6
+
+add5(num)
+```
+
+What do you think the value of `num` will be at this point?
+
+Note that we can also use the variable name `x` outside of the function, and this will be a separate variable. 
+
+```{r}
+x <- 7 
+add5(x)
+```
+
+Read [Scoping Rules of R](https://bookdown.org/rdpeng/rprogdatascience/scoping-rules-of-r.html) for a more detailed explanation. 

@@ -1,0 +1,37 @@
+---
+title: "HLC_Homework6"
+author: "Ellen Risemberg"
+date: "6/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Exercise 1
+
+Use `genPrimer` from functions day 1 to generate a list of 20 primers that are between 20-30 base pairs in length.
+
+```{r}
+```
+
+Write a for loop that prints "primer is between 20 and 24 bases" if the primer has 20 or more bases and 24 or fewer bases. 
+
+```{r}
+```
+
+#### Exercise 2
+
+Make a vector of the days of the week:
+
+```{r}
+```
+
+Use sapply to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+
+Hint: use the function substr to extract a subset of the characters from a character string.
+
+```{r}
+```
+

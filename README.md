@@ -4,7 +4,7 @@
 
 Classes will be run using [Rstudio](https://www.rstudio.com/products/rstudio/download/#download). Students are expected to provide their own laptop.
 
-### 2019 Schedule:
+### 2022 Schedule:
 |Day | Subject | Homework |
 |:--:|:---:|:------------:|
 |1  | Intro | [Exercise 1](Day1_class_introduction/class_introduction.md) |

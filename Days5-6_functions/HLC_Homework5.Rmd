@@ -1,0 +1,46 @@
+---
+title: "HLC_Homework5"
+author: "Ellen Risemberg"
+date: "6/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Exercise 1
+
+Write a function that returns the length and sum of a given vector of numbers. How can you work around the fact that `return` can only be used once in a function?
+
+**Solution**:
+
+```{r}
+```
+
+### Exercise 2
+
+The following function generates random primers. Use it to create a list of 50 primers between 40-50 base pairs:
+
+```{r}
+library(stringi) # needed for function stri_rand_strings
+
+genPrimer <- function(minlen, maxlen, nprimers, bases = '[ACTG]') {
+
+  lengths <- lengths1 <- sample(minlen:maxlen, nprimers,replace=TRUE)
+  res <- stri_rand_strings(nprimers, lengths, bases)
+  return(res)
+  
+}
+```
+
+Then, write a function that counts the number of G's in each of your randomly generated primers from above, and returns three items: the primer sequence, the primer length, and the number of G's in that primer.  
+
+*Hint:* Use the function `str_count` in the library `stringr` to count the G's.
+
+**Solution**:
+
+```{r}
+```
+
+

@@ -1,0 +1,62 @@
+---
+title: "HLC_Homework6"
+author: "Ellen Risemberg"
+date: "6/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Exercise 1
+
+Use `genPrimer` from functions day 1 to generate a list of 20 primers that are between 20-30 base pairs in length.
+
+`genPrimer` function:
+
+```{r}
+library(stringi) # Required for stri_rand_strings function
+
+genPrimer <- function(minlen, maxlen, nprimers, bases = '[ACTG]') {
+  
+  lengths <- lengths1 <- sample(minlen:maxlen, nprimers,replace=TRUE)
+  res <- stri_rand_strings(nprimers, lengths, bases)
+  return(res)
+  
+}
+```
+
+Create primers vector: 
+
+```{r}
+primers <- genPrimer(20, 30, 20)
+```
+
+Write a for loop that prints "primer is between 20 and 24 bases" if the primer has 20 or more bases and 24 or fewer bases. 
+
+```{r}
+for(primer in primers) {
+  if(nchar(primer) > 19 & nchar(primer) < 25) print("primer is between 20 and 24 bases")
+}
+```
+
+#### Exercise 2
+
+Make a vector of the days of the week:
+
+```{r}
+days <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+```
+
+Use sapply to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+
+Hint: use the function substr to extract a subset of the characters from a character string.
+
+```{r}
+abbr <- sapply(days, function(x) 
+  if(substr(x, 1, 1) == "T" | substr(x, 1, 1) == "F") {substr(x, 1, 2)} # if the first character is T or F, extract first two characters
+               else {substr(x, 1, 1)} # everything else, extract first character
+  )
+```
+
