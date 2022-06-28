@@ -23,15 +23,14 @@ Write a for loop that prints "primer is between 20 and 24 bases" if the primer h
 
 #### Exercise 2
 
-Make a vector of the days of the week:
+Write a function that takes as input a gapminder dataset from 2002 and a specified continent, and prints out the list of countries.
 
 ```{r}
-```
+library(dplyr)
+library(gapminder)
 
-Use sapply to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+gap2002 <- filter(gapminder, year==2002)
 
-Hint: use the function substr to extract a subset of the characters from a character string.
-
-```{r}
+### solution here
 ```
 

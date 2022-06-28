@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 So far we've been using a lot of functions that exist within R. Now we'll learn how to build our own function.
 
+
 ```{r eval=FALSE}
 myfunction <- function(arg1, arg2, ...) {
   
@@ -44,6 +45,7 @@ A function that only returns the given value is not useful, but it does illustra
 second_function <- function(x) {
   ans <- x^2 + 1
   return(ans)
+  
 }
 
 second_function(9)
@@ -55,7 +57,12 @@ second_function(9)
 Write a function that converts a Fahrenheit temperature to Kelvin (remember that K = 5/9*(F - 32) + 273.15).
 
 ```{r}
+f2k <- function(f) {
+  k <- (5/9)*(f - 32) + 273.15
+  return(k)
+}
 
+f2k(60)
 ```
 
 #### Exercise 2
@@ -65,6 +72,37 @@ Suppose we wanted to look at the Gapminder dataset and calculate GDP. Write a fu
 Tip: first, load `dplyr` and `gapminder`. 
 
 ```{r}
+library(dplyr)
+library(gapminder)
+```
+
+Solution:
+
+```{r}
+getGDP <- function(data){
+  new_data <- mutate(data, GDP=gdpPercap*pop)
+  return(new_data)
+}
+
+getGDP(gapminder)
+```
+
+Alternate solution:
+
+```{r}
+# Makes general function that computes GDP from 2 columns, which can be passed to mutate
+
+getGDP2 <- function(data){
+  gdp <- data$gdpPercap * data$pop
+  return(gdp)
+}
+
+# Returns a vector of GDPs
+getGDP2(gapminder)
+
+# Inside mutate will capture the vector in a column named `GDP`
+gapminder %>% 
+  dplyr::mutate(GDP = getGDP2(.))
 
 ```
 
@@ -164,13 +202,19 @@ sum
 Use a for loop to print out all the countries in the Americas from Gapminder (hint: use `filter` to just extract the American countries; also, how can you avoid repeats?)
 
 ```{r}
+us_Gapminder <- filter(gapminder, continent == "Americas" & year == 2002)
 
+for (i in 1:length(us_Gapminder$country)){
+  print(us_Gapminder$country[i])
+}
 ```
 
 The levels tacked on make our output a little hard to read. We can suppress those by using the `as.character` function.
 
 ```{r}
-
+for (i in 1:length(us_Gapminder$country)){
+  print(as.character(us_Gapminder$country[i]))
+}
 ```
 
 If you want to keep the output of a for loop, it can be more efficient to use a function from the `apply` family. We'll go over this later. 
@@ -191,7 +235,9 @@ printYear <- function(year) {
 **Solution**:
 
 ```{r}
-
+for (year in years){
+  printYear(year)
+}
 ```
 
 
@@ -205,8 +251,8 @@ The code within an `if` or `if/else` statement is executed if the specified cond
 
 In R, you create an `if/else` statement with the following syntax:
 
-```{r,eval=FALSE}
-if (logical statment) { do something } else  { do something different } 
+```{r, eval=FALSE}
+if (logical statement) { do something } else  { do something different } 
 ```
 
 For example:
@@ -219,7 +265,7 @@ if (1 > 2){
 }
 ```
 
-The condition following the `if` statement is a condition that evaluates to a `boolean` value (either TRUE or FALSE). So you could equivalently use this code: 
+The condition following the `if` statement is a conditional that evaluates to a `boolean` value (either TRUE or FALSE). So you could equivalently use this code: 
 
 ```{r}
 print(1 > 2)
@@ -232,11 +278,10 @@ x <- 1000
 if (x > 100) print("'x' is greater than 100")
 ```
 
-And if the condition is FALSE, R does nothing:
 
 ```{r}
 x <- 10
-if (x > 100) print("'x' is greater than 100")
+if (x > 100) { print("'x' is greater than 100") } else { print("'x' is less than 100") }
 ```
 
 
@@ -256,21 +301,34 @@ if (y < 100) {
 }
 ```
 
+The `ifelse` function is a shorthand function to the traditional if/else statement. 
+
+```{r}
+v <- seq(1, 100)
+
+new <- ifelse(v < 50, 1, 0)
+```
+
+To assign the results of this function to a column:
+
+```{r}
+df <- data.frame(a = v, b = ifelse(v < 50, 1, 0))
+
+head(df)
+```
 
 #### Exercise 5
 
 Without using `filter`, loop through the entire Gapminder dataset, and just print out countries in the American continent. For simplicity and to avoid repeats, just use data from the year 2002: `gap2002 = filter(gapminder, year==2002)`
 
-```{r, echo=F, eval=F, include=F}
+```{r}
+gap2002 <- filter(gapminder, year==2002)
 
-```
-
-#### Bonus
-
-Write a function that takes as input a gapminder dataset from 2002 and a specified continent, and prints out the list of countries.
-
-```{r, echo=F, eval=F, include=F}
-
+for (i in 1:nrow(gap2002)){
+  if (gap2002$continent[i] == "Americas"){
+    print(as.character(gap2002$country[i]))
+  }
+}
 ```
 
 
@@ -296,7 +354,23 @@ lapply(years, function(x) paste("The year is", x))
 
 Repeat the Gapminder exercise (print out all countries in the Americas) using `sapply` and `lapply`
 
-```{r, echo=F, eval=F, include=F}
+```{r}
+
+```
+
+#### Exercise 7
+
+Make a vector of the days of the week:
+
+```{r}
+
+```
+
+Use `sapply` to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+
+Hint: use the function `substr` to extract a subset of the characters from a character string.
+
+```{r}
 
 ```
 

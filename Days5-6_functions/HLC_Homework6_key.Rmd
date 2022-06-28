@@ -43,20 +43,28 @@ for(primer in primers) {
 
 #### Exercise 2
 
-Make a vector of the days of the week:
+Write a function that takes as input a gapminder dataset from 2002 and a specified continent, and prints out the list of countries.
 
 ```{r}
-days <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-```
+library(dplyr)
+library(gapminder)
 
-Use sapply to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+gap2002 <- filter(gapminder, year==2002)
 
-Hint: use the function substr to extract a subset of the characters from a character string.
+printCty <- function(data, cont)
+{
 
-```{r}
-abbr <- sapply(days, function(x) 
-  if(substr(x, 1, 1) == "T" | substr(x, 1, 1) == "F") {substr(x, 1, 2)} # if the first character is T or F, extract first two characters
-               else {substr(x, 1, 1)} # everything else, extract first character
-  )
+  for (i in 1:length(data$continent))
+  {
+    if (data$continent[i] == cont) 
+    {
+      print(as.character(data$country[i]))
+    }
+  }
+}
+
+printCty(gap2002, "Americas")
+printCty(gap2002, "Africa")
+printCty(gap2002, "Asia")
 ```
 

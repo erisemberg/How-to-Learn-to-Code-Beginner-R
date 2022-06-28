@@ -252,7 +252,7 @@ The code within an `if` or `if/else` statement is executed if the specified cond
 In R, you create an `if/else` statement with the following syntax:
 
 ```{r, eval=FALSE}
-if (logical statment) { do something } else  { do something different } 
+if (logical statement) { do something } else  { do something different } 
 ```
 
 For example:
@@ -278,10 +278,12 @@ x <- 1000
 if (x > 100) print("'x' is greater than 100")
 ```
 
+
 ```{r}
 x <- 10
-if (x > 100) print("'x' is greater than 100")
+if (x > 100) { print("'x' is greater than 100") } else { print("'x' is less than 100") }
 ```
+
 
 If/else statements can also be nested:
 
@@ -300,6 +302,22 @@ if (y < 100) {
 ```
 
 
+The `ifelse` function is a shorthand function to the traditional if/else statement. 
+
+```{r}
+v <- seq(1, 100)
+
+new <- ifelse(v < 50, 1, 0)
+```
+
+To assign the results of this function to a column:
+
+```{r}
+df <- data.frame(a = v, b = ifelse(v < 50, 1, 0))
+
+head(df)
+```
+
 #### Exercise 5
 
 Without using `filter`, loop through the entire Gapminder dataset, and just print out countries in the American continent. For simplicity and to avoid repeats, just use data from the year 2002: `gap2002 = filter(gapminder, year==2002)`
@@ -307,35 +325,11 @@ Without using `filter`, loop through the entire Gapminder dataset, and just prin
 ```{r}
 gap2002 <- filter(gapminder, year==2002)
 
-for (i in 1:length(gap2002$continent))
-{
-  if (gap2002$continent[i] == "Americas") 
-  {
+for (i in 1:nrow(gap2002)){
+  if (gap2002$continent[i] == "Americas"){
     print(as.character(gap2002$country[i]))
   }
 }
-```
-
-#### Bonus
-
-Write a function that takes as input a gapminder dataset from 2002 and a specified continent, and prints out the list of countries.
-
-```{r}
-printCty <- function(data, cont)
-{
-
-  for (i in 1:length(data$continent))
-  {
-    if (data$continent[i] == cont) 
-    {
-      print(as.character(data$country[i]))
-    }
-  }
-}
-
-printCty(gap2002, "Americas")
-printCty(gap2002, "Africa")
-printCty(gap2002, "Asia")
 ```
 
 
@@ -366,6 +360,25 @@ us_Gapminder <- filter(gapminder, continent == "Americas" & year == 2002)
 
 sapply(as.character(us_Gapminder$country), function(x) x)
 lapply(as.character(us_Gapminder$country), function(x) x)
+```
+
+#### Exercise 7
+
+Make a vector of the days of the week:
+
+```{r}
+days <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+```
+
+Use `sapply` to create a vector that contains abbreviations for the days of the week using days. Use an if/else statement to keep just the first character of each day of the week that starts with a unique letter (Monday, Wednesday, Friday), but keep two characters for days that start with the same letter as another day (Tuesday, Thursday, Saturday, and Sunday).
+
+Hint: use the function `substr` to extract a subset of the characters from a character string.
+
+```{r}
+abbr <- sapply(days, function(x) 
+  if(substr(x, 1, 1) == "T" | substr(x, 1, 1) == "F") {substr(x, 1, 2)} # if the first character is T or F, extract first two characters
+               else {substr(x, 1, 1)} # everything else, extract first character
+  )
 ```
 
 

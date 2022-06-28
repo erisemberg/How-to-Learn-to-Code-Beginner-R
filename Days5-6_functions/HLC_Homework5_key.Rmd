@@ -25,7 +25,7 @@ myFun <- function(vector) {
   return(results)
 }
 
-myFun(v)
+results <- myFun(v)
 ```
 
 ### Exercise 2
@@ -38,7 +38,7 @@ library(stringr)
 
 genPrimer <- function(minlen, maxlen, nprimers, bases = '[ACTG]') {
 
-  lengths <- lengths1 <- sample(minlen:maxlen, nprimers,replace=TRUE)
+  lengths <- sample(minlen:maxlen, nprimers,replace=TRUE)
   res <- stri_rand_strings(nprimers, lengths, bases)
   return(res)
   
