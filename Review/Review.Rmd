@@ -39,10 +39,10 @@ This is extremely helpful for understanding how a particular function works, wha
 
 The generic structure of function arguments and default values is as follows:
 ```{r eval=FALSE, include=TRUE}
-functionName(argument1, argument2, argument3 = default)
+functionName(argument1, argument2, argument3 = default, ...)
 ```
 
-Arguments with default values do not need to be specified when running a function, but they can be overwritten if you would like to specify a value other than the default.
+A function can contain any number of arguments with or without default values. Arguments with default values do not need to be specified when running a function, but they can be overwritten if you would like to specify a value other than the default.
 
 # Review
 

@@ -269,8 +269,8 @@ div.tocify {
 <pre class="r"><code>?sd</code></pre>
 <p>This is extremely helpful for understanding how a particular function works, what arguments it takes (and in what order), and if there are any default arguments.</p>
 <p>The generic structure of function arguments and default values is as follows:</p>
-<pre class="r"><code>functionName(argument1, argument2, argument3 = default)</code></pre>
-<p>Arguments with default values do not need to be specified when running a function, but they can be overwritten if you would like to specify a value other than the default.</p>
+<pre class="r"><code>functionName(argument1, argument2, argument3 = default, ...)</code></pre>
+<p>A function can contain any number of arguments with or without default values. Arguments with default values do not need to be specified when running a function, but they can be overwritten if you would like to specify a value other than the default.</p>
 </div>
 </div>
 <div id="review" class="section level1">
@@ -588,7 +588,7 @@ labels_factor</code></pre>
 <p>Before you import/export data in R, you want to check to make sure your working directory (the default location R will read files from and write files to) matches where your file is stored.</p>
 <p>To check your working directory, run:</p>
 <pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;/Users/brookefelsheim/Desktop/How-to-Learn-to-Code-Beginner-R&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/brookefelsheim/Desktop/How-to-Learn-to-Code-Beginner-R/Review&quot;</code></pre>
 <p>The output will be specific to your own computer.</p>
 <p>To change this to a new location that matches where you would like to load/save your files (which will also be specific to your own computer), you can run something like:</p>
 <pre class="r"><code>setwd(&quot;/Users/brookefelsheim/Documents/&quot;)</code></pre>
