@@ -1,0 +1,817 @@
+---
+title: "HLC R Class Overview"
+author: "Brooke Felsheim, Elena Khartinova, Ellen Risemberg"
+date: "6/30/2022"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Congratulations on making it through the How to Learn to Code R Class! We have covered many different topics in this course, so this R markdown file is meant to be a review and summary of some of the most important takeaways we've learned about the R programming language. R is a complicated programming language with many functionalities, so the content we've covered over the past four weeks is by no means representative of everything you can achieve with R.
+
+# Resources
+
+This class is called How to Learn to Code to emphasize that coding is a continual learning process, even for those with lots of experience. An important part of learning how to code is learning how to find and reference the right resources that will help you write your code! The R markdown lecture files we've used throughout this course and this review file may be useful to reference as you're writing your own code, but we have also compiled a list of additional resources (below) that you may find valuable. Googling whatever questions you may have will also be very helpful!
+
+### Resource list
+
+  - [R for Beginners](https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf): A book geared toward beginners that covers data, graphics, statistical analyses, and programming in R
+  - [R for Data Science](https://r4ds.had.co.nz/): A book teaching R for the application of data science
+  - [A Handbook of Statistical Analyses Using R](https://vcarrion.people.uic.edu/handbookrstarters.pdf): A book that covers how to do various statistical analyses in R, including simple and conditional inference, linear and logistic regression, analysis of variance, etc.
+  - [RStudio Cheatsheets](https://www.rstudio.com/resources/cheatsheets/): A compilation of pdf "cheatsheets" of how to use many popular packages in R, including `ggplot2` and `dplyr`
+  - [ggplot2 Function Reference](https://ggplot2.tidyverse.org/reference/): A reference many different functions used used to customize plots made with `ggplot2`
+  - [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf): A reference guide for writing and styling R markdown files
+  - [R Graph Gallery](https://r-graph-gallery.com/index.html): A collection of guides explaining how to create many different types of plots in R
+  
+### R Help Pages
+
+Don't forget that you can view the help pages for any function in R by running `?` before the name of the function in your R console. For example, to look at the help function for the `sd()` function in R, run:
+```{r}
+?sd
+```
+
+This is extremely helpful for understanding how a particular function works, what arguments it takes (and in what order), and if there are any default arguments.
+
+The generic structure of function arguments and default values is as follows:
+```{r eval=FALSE, include=TRUE}
+functionName(argument1, argument2, argument3 = default)
+```
+
+Arguments with default values do not need to be specified when running a function, but they can be overwritten if you would like to specify a value other than the default.
+
+# Review
+
+Review topics covered: 
+
+  1. [Variables and data types]
+  2. [R Packages]
+  3. [Data import and export]
+  4. [Plotting]
+  5. [Data manipulation]
+  6. [Functions and control flow]
+  
+This review contains a lot of material, so feel free to make use of the above table of contents or the one to the that is floating on the left of the knitted .html file.
+
+## Variables and data types
+
+### Variables
+
+A variable in R is a named memory location where data is stored.
+
+For example,
+```{r}
+x <- 5
+```
+
+Stores a value of 5 to a variable named `x`. In RStudio, `x` should now appear in your Environment list. Now, if you reference the value of `x`, R will interpret it as a value of 5.
+
+```{r}
+x
+```
+
+#### Rules for declaring R variables
+
+  * A variable name in R can contain a combinations of letters, numbers, periods `.`, or underscores
+  * A variable name must start with a letter
+  * R is case sensitive, so `height` and `Height` are treated as different variables
+  * The assignment operator `<-` is used for assigning variables (e.g. `x <- 5`)
+
+### R data types
+
+There are many different types of data that can be stored in R variables. To check the data type of a variable, we can use the `class()` function. 
+
+Some of the most common types of data that you will come across are:   
+
+  1. [`character`]
+  2. [`logical`]
+  3. [`numeric`]
+  4. [`factor`]
+
+#### `character`
+
+The `character` data type is used to specify character or string values in a variable. You can use single `''` or double quotes `""` to represent strings.
+    
+**Examples:**
+```{r}
+color <- "blue"
+class(color)
+id <- '4'
+class(id)
+value <- "TRUE"
+class(value)
+```
+
+#### `logical`
+
+The `logical` data type (also known as the boolean data type) represents values that are either `TRUE` or `FALSE`.
+
+**Examples:**
+```{r}
+value1 <- TRUE
+class(value1)
+value2 <- FALSE
+class(value2)
+```
+
+#### `numeric`
+
+The `numeric` data type is used to specify a real number with or without decimal values.
+
+**Examples:**
+```{r}
+height <- 12
+class(height)
+speed <- 32.5
+class(speed)
+```
+
+#### `factor`
+
+The `factor` data type is used to store ordered categorical data. Factors contain "levels" which is a vector of the possible unique values the factor can store. Factors can be useful when you are storing data with a limited number of unique values. We can create a factor with the `factor()` function.
+
+**Examples:**
+```{r}
+sex <- factor(c("Male", "Male", "Female", "Male"), levels = c("Male", "Female"))
+sex
+class(sex)
+strain <- factor(c(1, 4, 4, 2, 3, 2), levels = 1:4)
+strain
+class(strain)
+```
+
+Note that function levels can be reordered, as we talked about in the Day 2 material. `library(forcats)` is an R package built for manipulating factors and can achieve this.
+
+### R objects
+
+In R, variables are assigned to a type of R object. We covered many different types of these in class. 
+
+Some of the most common type of R objects that you will come across are:  
+
+  1. [`vector`]
+  2. [`matrix`]
+  3. [`data.frame`]
+  4. [`list`]
+  
+#### `vector`
+
+The simplest type of R object is a `vector`, which stores one or more instances of a single data type. 
+
+Single values in R are technically vectors of length 1. For example, when we print the number 7,
+```{r}
+7
+```
+
+we are printing a numeric vector of length 1 that contains the number 7 (this is why we see [1] before the 7, [1] represents the value at position 1 of the vector).
+
+To construct vectors of length greater than 1, we can use the `c()` function.
+
+**Examples:**
+```{r}
+numeric_vector <- c(1, 6, -3, 10)
+numeric_vector
+chr_vector <- c('A', 'B', 'C')
+chr_vector
+logical_vector <- c(TRUE, TRUE, FALSE, FALSE, FALSE)
+logical_vector
+```
+
+To create vectors containing sequences of numbers, you can use the `:` operator:
+
+```{r}
+1:15
+5:23
+```
+
+You can also use the `seq()` function:
+
+```{r}
+seq(from = 1, to = 15)
+seq(from = 2, to = 40, by = 4)
+```
+
+The length of a vector can be calculated with the `length()` function:
+```{r}
+length(numeric_vector)
+```
+
+Values at a particular index or set of indices can be extracted from a vector by specifying the indices surrounded by square brackets. For example,
+```{r}
+numeric_vector[1]
+numeric_vector[2:4]
+```
+
+
+#### `matrix`
+
+The `matrix` object in R stores two-dimensional data of a single data type. They can be created as shown below. 
+
+**Examples**:
+```{r}
+numeric_matrix <- matrix(1:20, nrow = 4, ncol = 5)
+numeric_matrix
+chr_matrix <- matrix(c('A', 'B', 'C', 'D', 'E', 'F'), nrow = 2, ncol = 3)
+chr_matrix
+```
+
+The dimensions of a matrix can be printed with the `dim()` function. 
+```{r}
+dim(chr_matrix)
+```
+
+Just the number of rows of a matrix can be extracted with the `nrow()` function, and just the number of columns can be extracted with the `ncol()` function.
+```{r}
+nrow(chr_matrix)
+ncol(chr_matrix)
+```
+
+To extract a particular value or set of values from a matrix, it can be indexed with `[row,col]` where `row` is the row number(s) and `col` is the column number(s). Not specifying `row` or `col` suggests all values. For example,
+```{r}
+chr_matrix[1,3] # row 1, column 3
+chr_matrix[1:2, 2:3] # rows 1-2, columns 2-3
+chr_matrix[2,] # row 2
+chr_matrix[,3] # column 3
+```
+
+
+#### `data.frame`
+
+Data frames are a type of tabular object in R. Unlike a `matrix`, a `data.frame` object can contain different types of data. The data types of values within a column must all be the same, but each column may contain a different type of data. Data frames are created using the `data.frame()` function, specifying the names and contents of the columns. All columns must be exactly the same length.
+
+**Example:**
+```{r}
+data <- data.frame(
+  sex = c("Male", "Male", "Female"),
+  age = c(54, 27, 73),
+  state = c("NC", "CA", "FL"),
+  completed_survey = c(TRUE, FALSE, TRUE)
+)
+data
+```
+
+The dimensions of a data frame can be printed with the `dim()` function. 
+```{r}
+dim(data)
+```
+
+Just the number of rows of a data frame can be extracted with the `nrow()` function, and just the number of columns can be extracted with the `ncol()` function.
+```{r}
+nrow(data)
+ncol(data)
+```
+
+The column names of a data frame can be extracted with `colnames()`:
+```{r}
+colnames(data)
+```
+
+The row names of a data frame can be extracted with `row.names()`:
+```{r}
+row.names(data)
+```
+
+The contents of a column can be extracted with the `$` symbol. For example,
+```{r}
+data$age
+```
+
+We can also index a data frame like a matrix using square brackets. For example,
+```{r}
+data[2,3] # row 2, column 3
+data[2, "state"] # row 2, state column
+data[, "age"] # age column
+data[1,] # row 1
+data[c(1,3), c("sex", "state")] # rows 1 and 3, sex and state columns
+```
+
+You can also view the type of each column with the `str()` (Structure) function:
+```{r}
+str(data)
+```
+
+#### `list`
+
+A `list` is a type of R object that can contain many different types of other R objects inside of it, such as vectors, matrices, data frames, or other list objects. Each element of a list object can be named if specified.
+
+**Examples:**
+```{r}
+my_list <- list(c(3,4,9,4), "Apple", c("red", "blue"), 3)
+my_list
+
+named_list <- list(colors = c("blue", "pink", "green"),
+                   mean = 43.2,
+                   ids = c(7, 34, 2, 1))
+named_list
+```
+
+To extract the contents of a list, we can use double square brackets `[[]]` containing the index we would like to extract:
+```{r}
+named_list[[2]]
+```
+
+We can also reference the name of the data in the list we would like to extract:
+```{r}
+named_list$ids
+```
+
+
+### Coercing data types
+
+To change data from one type to another, we can coerce it using functions such as: `as.character`, `as.logical`, `as.numeric`, or `as.factor`.
+
+For example, we can coerce a numeric vector to a character vector:
+```{r}
+numbers <- c(5, -8, 58, 20)
+numbers
+class(numbers)
+numbers_chr <- as.character(numbers)
+numbers_chr
+class(numbers_chr)
+```
+
+Or, we can coerce a character vector to a factor:
+```{r}
+labels <- c("D", "A", "D", "B", "C", "C", "B")
+labels
+class(labels)
+labels_factor <- as.factor(labels)
+labels_factor
+class(labels_factor)
+```
+
+## R packages
+
+R packages are usually a collection of R functions, complied code, and sample data. A package bundles together code, data, documentation, and tests, and is easy to share with others. 
+
+There are a lot of R packages that have been developed. If you are curious, a complete list of all available R CRAN packages can be found [here](https://cran.r-project.org/web/packages/available_packages_by_name.html).
+ 
+To install a packages, you can use the `install.packages()` function. You only need to do this once for any package you install. For example, to install the `tidyverse` package that we frequently used during the course, you had to run:
+```{r eval=FALSE, include=TRUE}
+install.packages("tidyverse")
+```
+
+To actually use functions you will have to load the package using `library()` function. You have to load libraries once at the beginning of any time you use an R script. To load the `tidyverse` package, you can run
+```{r message=FALSE}
+library(tidyverse)
+```
+
+## Data import and export
+
+### Setting your working directory
+
+Before you import/export data in R, you want to check to make sure your working directory (the default location R will read files from and write files to) matches where your file is stored.
+
+To check your working directory, run:
+```{r}
+getwd()
+```
+
+The output will be specific to your own computer.
+
+To change this to a new location that matches where you would like to load/save your files (which will also be specific to your own computer), you can run something like:
+```{r eval=FALSE, include=TRUE}
+setwd("/Users/brookefelsheim/Documents/")
+```
+
+### Data import
+
+There are several ways to load data into R. 
+
+`read.table()` works for tabular text files. It takes as arguments the `file` = file name, `header` = TRUE/FALSE (whether the first line contains the names of the columns), `sep` = what separates columns in the file (" " for blank spaces, '\t' for tabs, etc), `row.names` = a vector of optional row names, `col.names` = a vector of optional column names, `na.strings` = what is to be interpreted as a missing value aka an NA, and many more.
+
+**Example:**
+```{r eval=FALSE, include=TRUE}
+homes <- read.table(file = "homes.txt", sep = "\t", header = TRUE)
+```
+
+`read.csv()` works for .csv files (csv stands for comma separated values). It takes similar arguments as `read.table`, but assumes `sep = ","`. In general, we recommend working with .csv files over .xlsx files, since the data is in its raw form and more easily manipulated.
+
+**Example:**
+```{r eval=FALSE, include=TRUE}
+cities <- read.csv(file = "cities.csv")
+```
+
+`read_excel()` works for .xlsx files (aka Excel sheets). This function comes from the `readxl` package, which is part of the tidyverse. Before using this function, we need to run `library(readxl)` to load it into our R environment. You shoule specify the `path` of the .xlsx file and `sheet` number you want to load. If you do not specify a sheet number, the first sheet will be read.  
+
+**Example:**
+```{r eval=FALSE, include=TRUE}
+sales <- read_excel(path = "office_supply_sales.xlsx", sheet = 2)
+```
+
+### Data export
+
+There are also several ways to export data in R to your own local file.
+
+`write.table` will write tabular text files. It takes as arguments `x = ` the variable name of the R data you would like to write, `file` = the name of the file you would like to save, `quote` = TRUE/FALSE (whether to surround character values by double quotes), `sep` = what separates columns in the file (" " for blank spaces, '\t' for tabs, etc), `row.names` = TRUE/FALSE (whether to print row names), `col.names` = TRUE/FALSE (whether to print column names), and many more.
+
+**Example:**
+```{r eval=FALSE, include=TRUE}
+write.table(x = my_data, file = "data_from_R.txt", sep = "\t")
+```
+
+`write.csv` will write .csv files. It takes similar arguments as `read.table`, but assumes `sep = ","`.
+
+**Example:**
+```{r eval=FALSE, include=TRUE}
+write.csv(x = my_data, file = "data_from_R.csv")
+```
+
+## Plotting
+
+We covered how to plot using `ggplot2` in this course. To access these functions, we must load the package into R:
+
+```{r message=FALSE}
+library(ggplot2)
+```
+
+The function `ggplot()` is used to build plots from data frames. 
+
+We tell ggplot to use a dataset by supplying a `data.frame` to the `data` argument. For this example, we will use the `iris` data frame that is built into R.
+```{r eval=FALSE, include=TRUE}
+ggplot(data = iris)
+```
+
+To plot the data from a data frame, we have to **map** the data onto the plot. To do this we make an **aesthetic** (with `aes()`). **aesthetics** are parts of the plot that are **determined by the data**. In the below example, we say that we want to plot the `Sepal.Width` on the x-axis, and `Petal.Width` on the y-axis.
+
+This creates a plotting area that is informed by the data in `iris`.
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) 
+```
+
+We can add content to this plot by adding a `geom`. If we want to generate a scatterplot, we use `geom_point` for datapoints.
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point()
+```
+
+We can edit the parameters of geoms. For example, you can change the color of the points by editing the `color` parameter.
+
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point(color = "red")
+```
+
+If we want to edit the parameters of the geoms based on another variable in the data frame, we can edit the parameter specify the column name as an aesthetic. For example, we can color the points in our scatterplot by Species.
+
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point(aes(color = Species))
+```
+
+**Remember**:
+
+  - You can add as many components to a ggplot as you would like (think back to the plot we recreated in homework 2!)
+  
+```{r message=FALSE}
+library(gapminder)
+homeworkData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
+ggplot(homeworkData, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent, size = pop), alpha = 0.5) +
+  scale_x_log10() +
+  geom_smooth(method = lm, se = FALSE, color = "black", lty = "dashed") + 
+  ylab("Life expectancy") + 
+  xlab("GDP per capita") + 
+  labs(color = "Continent", size = "Population") + 
+  ggtitle("Life expectancy increases independently of GDP per cap") +
+  facet_wrap(vars(year)) + 
+  theme_bw() +
+  theme(strip.text.x = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14))
+```
+
+  - The order you plot the components matters (e.g. lines on top of points or vice versa)
+
+  - You can save ggplots to a variable and even add new components to the saved ggplot variable
+```{r}
+savedPlot <- ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point(aes(color = Species))
+savedPlot + ggtitle("Petal width by sepal width")
+```
+  
+
+In class, we went over many ways that you can customize your plots with `ggplot2`. We will not cover all of these here, but feel free to look back at the lecture notes and homework to review them. A really helpful cheatsheet detailing different aspects of `ggplot2` can be found [here](https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf)
+
+
+## Data manipulation
+
+We also covered how to manipulate data using `dplyr` in this course. To access these functions, we must load the package into R:
+
+```{r message=FALSE}
+library(dplyr)
+```
+
+### Logical operators
+
+We will first start with a review of logical operators, which we use to know which values of our data to manipulate.
+
+We will go over examples of different logical operators, and some examples using them with the following vector `x`:
+```{r}
+x <- c(1,5,10,NA)
+x
+```
+
+**Different types of operators:**
+
+  * `==` is equal
+  
+```{r}
+x == 5
+```
+
+  * `!=` is not equal
+  
+```{r}
+x != 5
+```
+  
+  * `!()` negates any logical statement 
+
+```{r}
+!(x == 5)
+```
+
+  * `>` is greater than
+  
+```{r}
+x > 5
+```
+
+  * `<` is less than
+  
+```{r}
+x < 5
+```
+
+  * `>=` is greater than or equal to
+  
+```{r}
+x >= 5
+```
+  
+  * `<=` is less than or equal to
+  
+```{r}
+x <= 5
+```
+  
+  * `is.na()` checks if a value is missing
+  
+```{r}
+is.na(x)
+```
+  
+  * `&` is AND (to return true, both statements must be true)
+  
+```{r}
+x < 5 & x > 0
+```
+
+  * `|` is OR (to return true, at least one statement must be true)
+  
+```{r}
+x < 5 | x > 7
+```
+  
+  * `%in%`returns a logical vector identifying if an element belongs to a vector
+
+```{r}
+x %in% c(1,2,3,10)
+```
+
+### `dplyr` functions
+
+We will review the following `dplyr` functions:
+
+  1. [`select`]
+  2. [`filter`]
+  3. [`mutate`]
+  4. [`left_join`]
+  5. [`group_by`]
+  6. [`summarize`]
+
+To review the `dplyr` functions, we will use a simple data frame that is generated below as our example:
+
+```{r}
+simple_data <- data.frame(
+  Name = c("Bob", "Jane", "Emily", "Carlos", "Taylor", "Brian"),
+  Age = c(54, 61, 32, 45, 27, 34),
+  Sex = c("M", "F", "F", "M", "M", "M"),
+  State = c("NC", "CA", "NC", "CA", "NC", "NC"),
+  Score = c(.87, .98, .74, .92, .81, .78)
+)
+simple_data
+```
+
+Let's review some of the popular `dplyr` functions:
+
+#### `select`
+
+`select` selects **columns** from a data frame and outputs the data frame containing only those columns. The first argument is the data, and the additional arguments are the names of the columns you are selecting.
+
+For example, select only then name and state columns from `simple_data`:
+```{r}
+select(simple_data, Name, State)
+```
+
+#### `filter`
+
+`filter` filters **rows** from a data frame and outputs the data frame containing only those rows. The first argument is the data, and then one or more criteria to filter by, using logical operators (reviewed above). 
+
+For example, select only rows with a sex of female in `simple_data`:
+```{r}
+filter(simple_data, Sex == "F")
+```
+
+#### `mutate` 
+
+`mutate` adds new columns to a data frame by evaluating expressions. The first argument is the data, and the second argument is the name of the new column `=` the values of the new column.
+
+For example, add a new column called "Percent" that contains the value of score multiplied by 100:
+
+```{r}
+mutate(simple_data, Percent = Score*100)
+```
+
+#### `left_join`
+
+Joining data is a way to merge datasets by common variables. `dplyr` contains functions for a number of different joins. We went over `left_join` in class, which accepts two tables, `x` and `y`, and a character vector of variables to join by. `left_join` keeps all the rows from `x`, and all columns from `x` and `y`. 
+
+As an example, let's join `simple_data` with another simple data frame that contains additional state information.
+```{r}
+state_info <- data.frame(
+  State = c("CA", "NY", "NC", "MO"),
+  Timezome = c("PST", "EST", "EST", "CDT"),
+  Region = c("West", "East", "East", "Midwest")
+)
+state_info
+```
+
+We join by the state column and can keep all of the rows from `simple_data` and all of the columns from both `simple_data` and `state_info`:
+
+```{r}
+left_join(simple_data, state_info, by = "State")
+```
+
+#### `group_by`
+
+`group_by` will group a dataset by one or more variables. This doesn't change how the data looks, but changes how the data interacts with other `dplyr` functions, such as `summarize`.
+
+For example, let's group `simple_data` by the sex column.
+
+```{r}
+grouped_data <- group_by(simple_data, Sex)
+```
+
+#### `summarize`
+
+`summarize` reduces multiple values to a single value. It is typically used on data that have already been grouped. The output will be one row for each group. The arguments are the data, followed by a summary function. It can accept multiple arguments.
+
+For example, let's take our dataset grouped by sex and summarize the number of observations, average age, minimum score, and maximum score:
+```{r}
+summarize(grouped_data,
+          n_obs = n(),
+          avg_age = mean(Age),
+          min_score = min(Score),
+          max_score = max(Score))
+```
+
+### Pipes
+
+The pipe operator, `%>%`, takes the output of one function and pass it to another function. Pipes eliminate common issues that arise when dealing with data in R and allow you to seamlessly connect `dplyr` operations. 
+
+For example, to perform multiple `dplyr` functions in one step on `simple_data` using pipes, we can run:
+```{r}
+simple_data %>% 
+  group_by(State) %>% 
+  summarize(avg_score = mean(Score))
+```
+
+Note that we no longer had to enter the first argument (the dataset) for the `dplyr` functions. It is inferred by `dplyr` that the output from each step is piped to the new function as the input data. 
+
+## Functions and control flow
+
+The last topic we covered in class was creating functions and control flow. 
+
+### Functions
+
+We learned how to create our own functions in R. R functions can be created with the generic structure shown below:
+
+```{r eval=FALSE, include=TRUE}
+function_name <- function(arg1, arg2, ...) {
+  
+  # do some stuff
+  return(object)
+  
+}
+```
+
+As an example, we can create an example R function to take the average of two numbers:
+```{r}
+avg_two <- function(number1, number2) {
+  avg_val <- (number1 + number2) / 2
+  return(avg_val)
+}
+```
+
+We can run our custom function on any two numbers:
+```{r}
+avg_two(2,4)
+avg_two(100, 600)
+```
+
+### Control flow
+
+We covered the following types of control flow in class:
+
+  * [`for` loops]
+  * [`if/else` statements]
+
+#### `for` loops
+
+For loops are used to iterate through elements in a vector, repeating the same block of code each time. They take the basic form:
+
+```{r, eval=FALSE}
+for(value in vector) {
+  # Do some operation to each element of the vector
+}
+```
+
+Below is an example of using a `for` loop to print each value in a character vector:
+```{r}
+colors <- c("red", "orange", "yellow", "green", "blue")
+for (color in colors) {
+  print(color)
+}
+```
+
+We can also do this another way by iterating through the indices of a vector or data frame. For example, we can loop through indices 1 to the length of the vector (`length(colors)`). The variable `i` is typically used to represent a looping index:
+
+```{r}
+for (i in 1:length(colors)) {
+  print(colors[i])
+}
+```
+
+This can be especially useful for accessing multiple columns of a data frame in a for loop. For example, we can loop through each row of the `fruit` data frame below and print both the type and color. We loop through indices 1 to the number of rows in our data frame (`nrow(fruit)`):
+
+```{r}
+fruit <- data.frame(type = c("Apple", "Pear", "Lemon"),
+                    color = c("Red", "Green", "Yellow"))
+for(i in 1:nrow(fruit)) {
+  print(paste("Type:", fruit$type[i], "Color:", fruit$color[i]))
+}
+```
+
+#### `if/else` statements
+
+`if/else` statements are a way to achieve decision-making within your code.
+
+The code within an `if` statement will only run **if** the logical expression evaluates to be true. 
+
+For example,
+```{r}
+x <- 5
+if (x < 10) {
+  print("x is less than 10")
+}
+
+```
+
+When `x <- 5`, `x < 10` is `TRUE`, so the code within the `if` statement runs. 
+
+```{r}
+if (x < 0) {
+  print("x is less than 0")
+}
+```
+
+However, `x < 0` is `FALSE`, so the code within the `if` statement does not run.
+
+An `if` statement can be followed by an optional else statement which executes when the boolean expression is false.
+
+For example,
+```{r}
+if (x < 0) {
+  print("x is negative")
+} else {
+  print("x is positive")
+}
+```
+
+When `x <- 5`, `x < 0` is `FALSE`, so the code within the `if` statement does not run. The code within the `else` statement therefore runs instead.
+
+Another useful function is the `ifelse()`, which evaluates an `if/else` statement over a vector of values. For example,
+```{r}
+values <- -5:5
+values
+ifelse(values < 0, "neg", "pos")
+```
+
+
+
+
