@@ -20,13 +20,17 @@ This class is called How to Learn to Code to emphasize that coding is a continua
 
 ### Resource list
 
+  - [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.html): "The official introduction" manual to R, provided by R CRAN.
   - [R for Beginners](https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf): A book geared toward beginners that covers data, graphics, statistical analyses, and programming in R
+  - [W3 Schools R Tutorial](https://www.w3schools.com/r/): An online tutorial for learning many aspects of the R programming language
   - [R for Data Science](https://r4ds.had.co.nz/): A book teaching R for the application of data science
   - [A Handbook of Statistical Analyses Using R](https://vcarrion.people.uic.edu/handbookrstarters.pdf): A book that covers how to do various statistical analyses in R, including simple and conditional inference, linear and logistic regression, analysis of variance, etc.
+  - [simpleR](https://cran.r-project.org/doc/contrib/Verzani-SimpleR.pdf): A PDF guide for using R for introductory statistics
   - [RStudio Cheatsheets](https://www.rstudio.com/resources/cheatsheets/): A compilation of pdf "cheatsheets" of how to use many popular packages in R, including `ggplot2` and `dplyr`
   - [ggplot2 Function Reference](https://ggplot2.tidyverse.org/reference/): A reference many different functions used used to customize plots made with `ggplot2`
   - [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf): A reference guide for writing and styling R markdown files
   - [R Graph Gallery](https://r-graph-gallery.com/index.html): A collection of guides explaining how to create many different types of plots in R
+  - [Introduction to Bioconductor](https://www.datacamp.com/tutorial/intro-bioconductor): An introduction to the [Bioconductor](https://www.bioconductor.org/) project and packages for bioinformatics
   
 ### R Help Pages
 
