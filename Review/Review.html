@@ -868,23 +868,52 @@ state_info</code></pre>
 <p>The last topic we covered in class was creating functions and control flow.</p>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
-<p>We learned how to create our own functions in R. R functions can be created with the generic structure shown below:</p>
+<p>We learned how to create our own functions in R. A function is a block of code that runs when it is called. You can pass data (known as arguments or parameters) into a function, and a function can return data as a result. R functions can be created with the generic structure shown below:</p>
 <pre class="r"><code>function_name &lt;- function(arg1, arg2, ...) {
   
-  # do some stuff
-  return(object)
+  # Function body, do stuff here
   
+  return(object)
 }</code></pre>
-<p>As an example, we can create an example R function to take the average of two numbers:</p>
-<pre class="r"><code>avg_two &lt;- function(number1, number2) {
-  avg_val &lt;- (number1 + number2) / 2
-  return(avg_val)
+<p>As an example, we can create an example R function to divide one number by another:</p>
+<pre class="r"><code>divide_two &lt;- function(numerator, denominator) {
+  fraction &lt;- numerator / denominator
+  return(fraction)
 }</code></pre>
 <p>We can run our custom function on any two numbers:</p>
-<pre class="r"><code>avg_two(2,4)</code></pre>
+<pre class="r"><code>divide_two(numerator = 6, denominator = 2)</code></pre>
 <pre><code>## [1] 3</code></pre>
-<pre class="r"><code>avg_two(100, 600)</code></pre>
-<pre><code>## [1] 350</code></pre>
+<pre class="r"><code>divide_two(numerator = 500, denominator = 100)</code></pre>
+<pre><code>## [1] 5</code></pre>
+<p><strong>Note:</strong></p>
+<ul>
+<li>We do not need to specify the argument names when running a function if the arguments are given in the correct order. However, if we give the arguments out of order, we must specify the argument names.</li>
+</ul>
+<p>For example,</p>
+<pre class="r"><code>divide_two(50, 2)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code>divide_two(denominator = 3, numerator = 12)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<ul>
+<li>A function can contain any number of arguments. It may also not contain any arguments at all.</li>
+</ul>
+<p>For example, here is a function that does not have any arguments:</p>
+<pre class="r"><code>return_0 &lt;- function() {
+  return(0)
+}
+return_0()</code></pre>
+<pre><code>## [1] 0</code></pre>
+<ul>
+<li>Function arguments can have default values. That means that if we call the function without that argument, the function will use the default value.</li>
+</ul>
+<p>For example, here is a function that prints hello and then a given word. If the word is not specified, the function will use “world” as the word.</p>
+<pre class="r"><code>hello_function &lt;- function(word = &quot;world&quot;) {
+  return(paste0(&quot;Hello &quot;, word, &quot;!&quot;))
+}
+hello_function(&quot;R&quot;)</code></pre>
+<pre><code>## [1] &quot;Hello R!&quot;</code></pre>
+<pre class="r"><code>hello_function()</code></pre>
+<pre><code>## [1] &quot;Hello world!&quot;</code></pre>
 </div>
 <div id="control-flow" class="section level3">
 <h3>Control flow</h3>
@@ -897,7 +926,7 @@ state_info</code></pre>
 <h4><code>for</code> loops</h4>
 <p>For loops are used to iterate through elements in a vector, repeating the same block of code each time. They take the basic form:</p>
 <pre class="r"><code>for(value in vector) {
-  # Do some operation to each element of the vector
+  # Do some operation to each value of the vector
 }</code></pre>
 <p>Below is an example of using a <code>for</code> loop to print each value in a character vector:</p>
 <pre class="r"><code>colors &lt;- c(&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;)

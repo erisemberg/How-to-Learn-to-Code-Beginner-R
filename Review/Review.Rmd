@@ -699,30 +699,62 @@ The last topic we covered in class was creating functions and control flow.
 
 ### Functions
 
-We learned how to create our own functions in R. R functions can be created with the generic structure shown below:
+We learned how to create our own functions in R. A function is a block of code that runs when it is called. You can pass data (known as arguments or parameters) into a function, and a function can return data as a result. R functions can be created with the generic structure shown below:
 
 ```{r eval=FALSE, include=TRUE}
 function_name <- function(arg1, arg2, ...) {
   
-  # do some stuff
-  return(object)
+  # Function body, do stuff here
   
+  return(object)
 }
 ```
 
-As an example, we can create an example R function to take the average of two numbers:
+As an example, we can create an example R function to divide one number by another:
 ```{r}
-avg_two <- function(number1, number2) {
-  avg_val <- (number1 + number2) / 2
-  return(avg_val)
+divide_two <- function(numerator, denominator) {
+  fraction <- numerator / denominator
+  return(fraction)
 }
 ```
 
 We can run our custom function on any two numbers:
 ```{r}
-avg_two(2,4)
-avg_two(100, 600)
+divide_two(numerator = 6, denominator = 2)
+divide_two(numerator = 500, denominator = 100)
 ```
+
+**Note:** 
+
+  - We do not need to specify the argument names when running a function if the arguments are given in the correct order. However, if we give the arguments out of order, we must specify the argument names.
+
+For example,
+```{r}
+divide_two(50, 2)
+divide_two(denominator = 3, numerator = 12)
+```
+
+  - A function can contain any number of arguments. It may also not contain any arguments at all.
+  
+For example, here is a function that does not have any arguments:
+```{r}
+return_0 <- function() {
+  return(0)
+}
+return_0()
+```
+  
+  - Function arguments can have default values. That means that if we call the function without that argument, the function will use the default value.
+  
+For example, here is a function that prints hello and then a given word. If the word is not specified, the function will use "world" as the word.
+```{r}
+hello_function <- function(word = "world") {
+  return(paste0("Hello ", word, "!"))
+}
+hello_function("R")
+hello_function()
+```
+
 
 ### Control flow
 
@@ -737,7 +769,7 @@ For loops are used to iterate through elements in a vector, repeating the same b
 
 ```{r, eval=FALSE}
 for(value in vector) {
-  # Do some operation to each element of the vector
+  # Do some operation to each value of the vector
 }
 ```
 
