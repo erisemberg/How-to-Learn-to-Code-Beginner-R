@@ -1,0 +1,339 @@
+---
+title: "HLC Day 3"
+author: "Elena Kharitonova, Brooke Felsheim, Ellen Risemberg"
+date: '2022-06-10'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We will be using the `dplyr` and `ggplot2` functions today, which are both 
+contained in the `tidyverse` package. Let's start by loading this package
+into our R environment.
+```{r message=FALSE}
+library(tidyverse)
+```
+
+### Expectations
+
+1. Understand what pipes are and how to use them
+2. Know how to use common functions for data analysis from `dplyr`
+3. Apply `dplyr` and `ggplot` skills to conduct exploratory data analysis of a provided dataset
+
+
+## Brief Reminder of Things We Learned Day 1: (Exercise 3 min)
+
+* How do you make a vector called x that contains the numbers 5, 7, and 9?
+
+```{r}
+x <- c(5, 7, 9)
+```
+
+* How do you select the second element of x?
+
+```{r}
+x[2]
+```
+
+* How do you make a data frame called df that has two columns. The first is a column called course that contains an three entries, biology, statistics, and math, and the second column is your vector x. 
+
+```{r}
+df <- data.frame(course = c("biology", "statistics", "math"),
+                 x)
+df
+```
+
+* How do you extract the first column of df? 
+Note: there are 2 ways
+```{r}
+## Way 1
+df[,1]
+## Way 2
+df$course
+```
+
+
+* How do you extract the third entry of the first column of df?
+```{r}
+df[3,1]
+```
+
+
+* How can you change that entry to say "genetics"? 
+Hint: use [,] and = or <-
+```{r}
+df[3,1] <- "genetics"
+df
+```
+
+* How can you add a new column called y that contains 7,10,11?
+Hint: use $ and = or <-
+```{r}
+df$y <- c(7, 10, 11)
+df
+```
+
+
+
+### Loading Data
+
+There are several ways to load data into R. 
+
+`read.table()` works for .txt files. It takes as arguments the `file` = file name, `header` = TRUE/FALSE (whether the first line contains the names of the columns), `sep` which is what separates columns in the file ("" for blank spaces, '\t' for tabs, etc), `row.names` = a vector of optional row names, `col.names` = a vector of optional column names, `na.strings` = what is to be interpreted as a missing value aka an NA, and many more.
+
+`read.csv()` works for .csv files (csv stands for comma separated values). It takes similar arguments as `read.table`, but assumes `sep = ","`. In general, we recommend working with .csv files over .xlsx files, since the data is in its raw form and more easily manipulated.
+
+`read_excel()` works for .xlsx files (aka Excel sheets). This function comes from the `readxl` package, which is part of the tidyverse. Before using this function, we need to run `library(readxl)` to load it into our R environment. You shoule specify the `path` of the .xlsx file and `sheet` number you want to load. If you do not specify a sheet number, the first sheet will be read.  
+
+
+Note, you will want to write the file name as either the absolute file path, or relative to your current working directory. You can check your working directory using `getwd()`and set it using `setwd()` or going to the "Session" tab above and then clicking on "Set Working Directory"
+
+```{r, eval = FALSE}
+## Get and change working directory
+getwd()
+setwd("C:/Users/ekhar/Documents/") ## Edit to your own filesystem
+
+## Read a txt file example (sample data from https://people.sc.fsu.edu/~jburkardt/data/csv/csv.html)
+homes <- read.table(file = "homes.txt", sep = "\t", header = TRUE)
+
+## Read a csv file example (sample data from https://people.sc.fsu.edu/~jburkardt/data/csv/csv.html)
+cities <- read.csv(file = "cities.csv")
+
+## Read an excel sheet file example (sample data from https://www.contextures.com/xlsampledata01.html)
+library(readxl)
+sales <- read_excel(path = "office_supply_sales.xlsx", sheet = 2) # Reads second sheet of the excel file
+```
+
+
+### Breeding Bird Survey
+
+For this lesson, we'll be using a dataset that comes from the Breeding Bird Survey. The BBS is a long-term population monitoring program for birds in North America run in partnership between the US Geological Survey and the Canadian Wildlife Service. It began in 1966 and now consists of over 4000 annual surveys (called "routes", which each consist of 50 point counts) across the US and Canada. The data are freely available online, and today we will make use of a subset of the data consisting of all observations in North Carolina from 2000 to 2017.
+
+Read in two data tables: one called `counts` containing the observations, and one called `species` containing common names of species. Species are coded in `counts` by a 4-digit identification code (the variable `aou` - these unique codes were created by the American Ornithologists' Union), and `species` links `aou` to the common name of the species.  
+
+```{r}
+counts <- read.csv("https://raw.githubusercontent.com/gdicecco/HLC-data-public/master/bbs_nc_2000-2017.csv")
+species <- read.csv("https://raw.githubusercontent.com/gdicecco/HLC-data-public/master/bbs_species_20170712.csv")
+```
+
+Use `head` to look at the two data tables. You'll notice that `counts` contains numerical codes for country, state, route, and a variable called `stateroute`, which is a combination of the state number and route number and is a unique identifier for each route. There are also columns for year, species (`aou`), the total number of point counts out of 50 the species was observed at (`stoptotal`), and the total number of individuals observed (`speciestotal`).
+
+```{r}
+head(counts)
+head(species)
+```
+
+
+
+### Using dplyr for data analysis
+
+`dplyr` is another package in the tidyverse that contains functions useful for managing, subsetting, and manipulating data. Many of the functions in `dplyr` can cleanly replace base R operations such as subsetting. `dplyr` loads with the tidyverse (we did this already).
+
+We'll now look at a few workhorse functions from `dplyr`:
+
+#### Select
+
+`select` simply selects columns from a dataset and outputs those columns:
+
+```{r}
+commonnames <- select(species, # first argument is your data
+                      english_common_name, # followed by column names to select
+                      french_common_name) 
+head(commonnames)
+```
+
+This is very useful for when you want to select multiple columns at once.
+
+#### Filter
+
+Recall this function from the lesson on plotting. The first argument is the data, and then one or more criteria to filter by, using `==` or other logical operators. "==" is equal, "!=" is not equal, is.na() checks for whether or not a value is missing, "is.finite()" checks for whether the number is finite, "is.numeric()" checks for whether of not something is a numeric quantity. "&" is and. "|" is or.  "<=" is less than or equal to, ">=" is greater than or equal to.
+
+Additionally, you can filter by multiple criteria in the same line. Separating criteria with a comma operates like using `&`. 
+
+```{r}
+counts_2002 <- filter(counts, year == 2002)
+counts_2010_2015 <- filter(counts, year == 2010 | year == 2015)
+woodwarblers <- filter(species, sporder == "Passeriformes", family == "Parulidae")
+counts_less_2008 <- filter(counts, year < 2008)
+counts_finite_year <- filter(counts, is.finite(year))
+```
+
+A useful operator to know about when filtering data is `%in%`, which returns a logical vector identifying if an element belongs to a vector. Similarly to "!=", you can use a !() in front of a statement to mean "not".
+
+```{r}
+# using the woodwarblers table from above:
+sppwarblers <- species$aou %in% woodwarblers$aou 
+
+# returns a logical vector showing which values from the first vector are in the second
+# filter the species table by just species seen in our North Carolina dataset
+ncSpecies <- filter(species, aou %in% counts$aou)
+nonNcSpecies <- filter(species, !(aou %in% counts$aou))
+```
+
+
+#### Mutate
+
+`mutate` adds new variables to a data table by evaluating expressions. Below, we create a new column that is the log abundance of each species at each route/year.
+* The function `log` in R assumes base e, to do log base 10 you would use `log10()`
+
+```{r}
+logcounts <- mutate(counts, logN = log(speciestotal))
+```
+
+#### Joins
+
+Joining data is a way to merge datasets by common variables. `dplyr` contains functions for a number of different joins. For now, we'll just look at left joins, but the others are fairly self-explanatory once you understand one. `left_join` accepts two tables, `x` and `y`, and a character vector of variables to join by. `left_join` keeps all the rows from `x`, and all columns from `x` and `y`. 
+
+```{r}
+countsSpecies <- left_join(counts, species, by = "aou")
+```
+
+
+*Exercise 1*
+
+The variable `stateroute` in `counts` was created by a mutation of `statenum` and `route`. Replicate that mutation to create a new variable called `stateroute2`.
+
+```{r}
+counts2 <- mutate(counts, stateroute2 = statenum*1000 + route)
+head(counts2)
+```
+
+
+*Exercise 2*
+
+Read the help documentation for joins in `dplyr` (use `?left_join`). What different types of joins can be supported? What do you predict would be the outcome of `semi_join(species, counts)`? Try it and find out (use `head` to compare the result of the join and the original `species` table).
+
+```{r}
+sj_data <- semi_join(species, counts)
+head(sj_data)
+dim(sj_data)
+head(species)
+dim(species)
+```
+
+The semi join kept only the columns in `species` and only the rows that have an "aou" value in both `species` and `counts`.
+
+#### Group_by
+
+`group_by` will group a dataset by one or more variables. This doesn't change how the data looks, but changes how the data interacts with other `dplyr` functions and is useful for doing subsequent manipulation of the data, which will become apparent in the next section and the section on piping.
+
+```{r group by}
+groupedSpp <- group_by(species, sporder)
+```
+
+#### Summarize
+
+`summarize` reduces multiple values to a single value. It is typically used on data that have already been grouped. The output will be one row for each group. The arguments are the data, followed by a summary function. It can accept multiple arguments.
+
+```{r summarize}
+nSpp <- summarize(groupedSpp, total = n()) # this summary tells us how many species we have per order
+head(nSpp)
+
+summarize(groupedSpp, total = n(), minimum_aou = min(aou))
+```
+
+*Exercise 3*
+
+For each year in `counts`, use `group_by` and `summarize` to find out how many routes were surveyed and the mean number of individuals observed across all routes.
+
+Hint: To get the number of routes surveyed per year from counts, group by year and then use `length(unique(stateroute))` to summarize. `unique` returns the unique values in a vector (in this case, unique values of `stateroute` for each year), and `length` returns the length of a vector (here, the length of the vector of unique `stateroute` values, telling us how many unique `stateroute` values there are each year in `counts`).
+
+```{r}
+grouped_year <- group_by(counts, year)
+year_summary <- summarise(grouped_year,
+                          n_routes = length(unique(stateroute)),
+                          mean_ind = mean(speciestotal))
+year_summary
+```
+
+
+### Pipes in R
+
+The pipe operator, `%>%`, is originally from the package `magrittr`, which is a dependency of `dplyr`. So, loading the tidyverse will allow you to make use of this operator as well. Pipes take the output of one function and pass it to another function. Pipes eliminate common issues that arise when dealing with data in R and allow you to seamlessly connect `dplyr` operations. 
+
+We want to find out the number of species per order in North Carolina. We've done all the individual steps to get this information above, but we've had to save a new table each time. With piping, we can do all the steps at once and produce one output file:
+
+```{r pipes}
+# Without piping
+ncSpecies <- filter(species, aou %in% counts$aou)
+groupedNC <- group_by(ncSpecies, sporder)
+nSppNC <- summarize(groupedNC, total = n())
+# With piping 
+ncOrders <- species %>%
+  filter(aou %in% counts$aou) %>%
+  group_by(sporder) %>%
+  summarize(total = n())
+```
+
+Note that we no longer had to enter the first argument (the dataset) for the `dplyr` functions. It is inferred by `dplyr` that the output from each step is piped to the new function as the input data. 
+
+Using pipes cleaned up our environment by eliminating all those intermediate outputs, and the workflow is easy to read and understand quickly. 
+
+A good rule of thumb to follow: if you are saving the same variable with minor modifications sequentially (e.g. `df1`,`df2`, `df.subset`), you can probably pipe those lines together.
+
+*Exercise 4*
+
+Use pipes to do the following operation, producing just one output table:
+
+For the year 2000, determine which three species (give their English common names) occur on the most routes across North Carolina. (Use the `counts data frame`) 
+
+To do this, you will need to do the following:
+
+For the counts data frame, obtain entries only for the year 2000:
+
+```{r}
+output <- counts %>% filter(year == 2000)
+```
+
+
+For the counts data frame, obtain entries only for the year 2000, make a group by species number (aou):
+
+```{r}
+output <- counts %>% 
+  filter(year == 2000) %>% 
+  group_by(aou)
+```
+
+
+
+For the counts data frame, obtain entries only for the year 2000, determine the number of routes for each species: 
+
+```{r}
+output <- counts %>% 
+  filter(year == 2000) %>% 
+  group_by(aou) %>% 
+  summarise(n_routes = length(unique(stateroute)))
+```
+
+For the counts data frame, obtain entries only for the year 2000, determine the number of routes for each species, and reorder the dataframe by descending number of routes for each species
+* Hint: Use `arrange()`
+
+```{r}
+output <- counts %>% 
+  filter(year == 2000) %>% 
+  group_by(aou) %>% 
+  summarise(n_routes = length(unique(stateroute))) %>% 
+  arrange(desc(n_routes))
+```
+
+For the counts data frame, obtain entries only for the year 2000, determine the number of routes for each species, and reorder the dataframe by descending number of routes for each species. Join this new data frame with species. 
+
+```{r}
+output <- counts %>% 
+  filter(year == 2000) %>% 
+  group_by(aou) %>% 
+  summarise(n_routes = length(unique(stateroute))) %>% 
+  arrange(desc(n_routes))
+
+joined_output <- left_join(output, species)
+```
+
+Use this to determine which three species (give their English common names) occur on the most routes across North Carolina. (Use the `counts data frame`) 
+```{r}
+head(joined_output)
+```
+
+Answer: Eastern Towhee, Indigo Bunting, Tufted Titmouse
+

@@ -1,0 +1,362 @@
+---
+title: "HLC R Class - Day 1"
+author: "Brooke Felsheim, Ellen Risemberg, Elena Kharitonova"
+date: "6/6/2022"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Welcome to HLC: Introduction to R 
+
+- Introductions
+- Class expectations:
+   - Work together
+   - Ask questions
+   - Be respectful of others
+   - Making mistakes is the best way to learn!
+   - Homework Policy
+      - We will assign homework but we won't grade it. We plan to hand out solutions after it is due. If anybody has questions about any of the problems, we can go over them in the first 10 minutes of class.
+  
+
+## R setup
+
+ - Download R and Rstudio
+ - Open Rstudio
+ - Explain each window
+ 
+What is R and Rstudio? How are they different?
+
+R is a programming language used for statistical computing. It is the software that performs the actual instructions.  Without R installed on your computer or server, you would not be able to run any commands. Meanwhile, RStudio is an IDE, or integrated development environment. It's a software that provides an nifty interface to R, that makes using the R language a lot easier and neater. RStudio allows users to develop and edit programs in R by supporting a large number of statistical packages, higher quality graphics, and the ability to manage your workspace.
+
+R and RStudio are not separate versions of the same program, and cannot be substituted for one another. R may be used without RStudio, but RStudio may not be used without R.
+
+
+## Console vs. R scripts vs. R markdown
+
+There are two main ways of interacting with R: using the console or using a file that contains your code.
+
+The console window (in RStudio, the bottom left panel) is the place where R is waiting for you to tell it what to do, and where it will show the results of a command. You can type commands directly into the console, but they will be forgotten when you close the session. If R is ready to accept commands, the R console shows a > prompt. If it receives a command, R will try to execute it, and when ready, show the results and come back with a new >-prompt to wait for new commands. (We recommend using the console only for things you don't want to keep a record of)
+
+If R is still waiting for you to enter more data because it isn’t complete yet, the console will show a + prompt. It means that you haven’t finished entering a complete command. This is because you have not ‘closed’ a parenthesis or quotation. If you’re in RStudio and this happens, click inside the console window and press Esc; this should help you out of trouble.
+
+An R script file (.R file) allows you to enter the commands and save the script. (It is the top left window in RStudio) This way, you have a complete record of what you did, you can easily show others how you did it and you can do it again later on if needed. You can evaluate any line of code a by using Ctrl-Enter or by highlighting it and clicking Run.
+
+An R Markdown (.Rmd file) is a specific type of file format for making dynamic documents, like this one. It is nice because it allows you to write plain text and code in one document. Therefore in one document you can save and execute code, and produce high quality documents that include both code and text. Additionally, R Markdown files can be converted to an .html, a .pdf, or a .word document easily by knitting. 
+
+For the purposes of our instruction, R Markdown allows us to include code chunks and the text that helps explain them in an easy-to-read manner. For your own use, R Markdown will allow you to write documents and reports that include traditional formatted text, as well as the data visualizations you make in class, and present them both together in a high quality professional document.
+
+
+### Using this document
+
+* Code blocks and R code have a grey background 
+* \# indicates a comment, and anything after a comment will not be evaluated in R
+* The comments beginning with \#\# under the code in the grey code boxes are the output from the code directly above; any comments added by us will start with a single \#
+* While you can copy and paste code into R, you will learn faster if you type out the commands yourself. 
+* Read through the document after class. This is meant to be a reference, and ideally, you should be able to understand every line of code. If there is something you do not understand please email us with questions or ask in the following class (you're probably not the only one with the same question!). 
+
+
+
+# Intro to R
+
+## By default R spits out things to terminal
+```{r}
+2 + 2
+
+100*100
+
+"My name is Spencer"
+```
+```{r}
+2+7
+
+```
+
+## You can store things in **variables** with `<-`
+
+You can quickly type `<-` with `Alt + -` in Rstudio
+
+```{r}
+myName <- "Elena"
+myName = "Elena"
+```
+
+## R will spit it back out when you call it
+```{r}
+myName
+```
+
+## R can do operations on variables
+```{r}
+myNumber <- 10
+
+myNumber + 10
+```
+
+## Comments are hidden from R
+```{r}
+# Text after a # will not be run, it is a "comment". 
+# This lets you document your scripts. Always comment your code!
+# The # does not have to be at the beginning
+
+2 + 2 # Addition!
+
+
+```
+
+# Data in R
+
+#### Vectors
+
+The most simple data structure available in R is a vector. You can make vectors of numeric values, logical values, and character strings using the `c()` function. For example:
+
+```{r}
+c(5,6,7)
+c(1, 2, 3)
+c(TRUE, TRUE, FALSE)
+c("a", "b", "c")
+```
+
+You can also join to vectors using the `c()` function.
+
+```{r}
+x <- c(1, 2, 5)
+y <- c(3, 4, 6)
+z <- c(x, y)
+z
+
+1+3
+4+2
+5+6
+
+x+y
+x*2
+
+```
+
+An element of a vector can be selected using `[]`. The `[` operator can also take a vector as the argument. For example you can select the first and third elements:
+```{r}
+z[3]
+z[c(3,1)]
+```
+
+
+#### Data frames
+
+Data frames are likely the data structure you will used most in your analyses. A data frame is a special kind of list that stores same-length vectors of different classes. You create data frames using the `data.frame` function. The example below shows this by combining a numeric and a character vector into a data frame. It uses the `:` operator, which will create a vector containing all integers from 1 to 3. 
+
+```{r}
+df1 <- data.frame(x = c(1,2,3), y = c("a", "b", "c"))
+df1
+class(df1)
+
+
+df2<- data.frame(Column_1 = c("random", "vector"), column2 = c("other", "vector"), file = c(3,5) )
+
+df2<- data.frame(Column_1 = c("random", "vector"), column2 = c("other", "vector"), file = c(3,5) )
+
+
+df2
+```
+
+`iris` is a built-in dataset that we will use today to cover some basic. It
+contains measurements of 3 different species of flower.
+
+We can look at the contents by printing it to the console (annoying for large datasets)
+```{r, eval=FALSE}
+iris
+```
+
+The `head()` function will print the first 6 rows
+```{r}
+head(iris)
+
+head(iris)
+```
+
+The `View()` function will open the dataset in Rstudio's data viewer.
+```{r, eval=F}
+View(iris)
+```
+
+Datasets can be stored in R as **data.frames**. `iris` is a data.frame. You can think of these like excel tables.
+
+What is special about data.frames is that each column contains data of a certain type. R sees numbers and words as different things. Number columns can be used in math operations, but word columns cannot.
+**Note:** We will talk in more detail about these data types later
+
+You can view the type of each column with the `str()` (Structure) function. Here you can see that `Sepal.Length` is a number (`num`), but `Species` is a type called a `Factor`.
+```{r}
+str(iris)
+```
+
+Individual columns can be referenced in R by using `$` to call a column by name.
+```{r}
+iris$Sepal.Length
+iris$Sepal.Length
+```
+
+Similarly, to a vector so you can subset a data frame using `[]`, but keep in mind data frames have both rows and columns!
+
+```{r}
+
+
+#dataframe[row, column]
+
+## Since Sepal.Length is the first column
+iris[,1]
+
+## To see the first row of iris, we could use
+iris[1,]
+```
+
+Most of the time, the `$` is easier to work with because you can type out the name of the column and Rstudio often gives you fill in options!
+
+```{r}
+iris$Species
+```
+
+R will do operations along entire columns. To multiply all `Sepal.Length` values by 2, for example:
+```{r}
+iris$Sepal.Length * 2
+```
+
+## Exercise (3 minutes):
+ - print all values of `Petal.Width` to the terminal
+```{r}
+iris$Petal.Width
+```
+ 
+ 
+ - You can ask for help in R using the `?` function. Try running `?mean` to find out what the `mean()` function does.
+ - what is the mean value of `Petal.Width`?
+```{r}
+mean(x = iris$Petal.Width)
+```
+ 
+ 
+ 
+ - what is the sum of all `Petal.Width`? (HINT: guess the function name, or google for it!)
+```{r}
+sum(iris$Petal.Width)
+```
+ 
+ 
+ 
+ 
+ - what is the standard deviation of `Sepal.Length`?
+ 
+ 
+ 
+ - what is the entry that is in the second row and 3rd column of iris
+```{r}
+iris[2,3]
+
+iris[3,2] # third row, second column
+```
+
+
+
+## Packages in R
+
+In short, R packages are usually a collection of R functions, complied code and sample data. A package bundles together code, data, documentation, and tests, and is easy to share with others. Often, the chances are that someone has already solved a problem that you’re working on, and you can benefit from their work by downloading their package.
+ 
+In order to be able to use a package, you first need to install (aka download) it using `install.packages()`. You only need to do this once for any package you install. To actually use functions you will have to load the package using `library()` function. You have to load libraries once at the beginning of any time you use an R script.
+
+```{r, eval=F}
+# This installs multiple packages that help manipulate & plot data:
+install.packages("tidyverse")
+
+# This installs two packages that contain example datasets we will use later in the course:
+install.packages(c("gapminder", "titanic"))
+```
+ 
+
+## Plotting
+The package `ggplot2` is used for making plots from data.frames. The `ggplot2` package is a part of the `tidyverse` package, so you do not need to install it separately! Load the package by calling `library(ggplot2)`. Remember, you have to load libraries once per script.
+
+```{r}
+library(ggplot2)
+```
+
+The function `ggplot()` is used to build plots from data. By calling `ggplot` alone we build a totally empty plot.
+
+```{r}
+ggplot()
+```
+
+We tell ggplot to use a dataset by giving it a `data.frame` to the `data` argument.
+```{r}
+ggplot(data = iris)
+```
+
+Lets make a scatterplot of Sepal width vs Petal width.
+
+To do this we have to **map** the data onto the plot. To do this we make an **aesthetic** (with `aes()`). **aesthetics** are parts of the plot that are **determined by the data**. Here we say that we want to plot the `Sepal.Width` on the x-axis, and `Petal.Width` on the y-axis.
+
+This creates a plotting area that is informed by the data in `iris`.
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) 
+```
+
+Now let's add the points. We do this by adding a `geom`. In this case `geom_point` for datapoints.
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point()
+```
+
+Plots can be saved to variables just like before
+```{r}
+sepal.vs.petal <- ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_line(color = "blue")
+```
+
+```{r}
+sepal.vs.petal
+```
+
+We can edit the parameters of geoms. For example, you can change the color of the points by editing the `color` parameter.
+
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_point(color = "red")
+```
+
+A really helpful cheatsheet detailing different aspects of ggplot can be found [here](https://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/data-visualization-2.1.pdf)
+
+
+## Exercise:
+### Question 1:
+ - Try making the same scatterplot but color the points by their `Species`. 
+ - **Hints:**
+  - Try looking at the help page for `aes()` with `?aes`
+  - If this isn't helping, try googling a solution!
+  
+```{r}
+# Correct answer:
+ggplot(data = iris, mapping = aes(x = Sepal.Width, y = Petal.Width, color = Species)) +
+  geom_point()
+
+```
+
+### Question 2:
+ - Make a boxplot like the one below plotting the `Petal.Width` for each `Species`
+ - **Hints:** 
+  - which `geom` adds a boxplot?
+  - How do you fill-in the boxplot by species?
+  - Try googling a solution.
+
+```{r}
+# Correct answer:
+ggplot(data = iris, mapping = aes(fill = Species, y = Petal.Width)) +
+  geom_boxplot() 
+```
+
+## More reading
+[R for Data Science: ggplot2 introduction](https://r4ds.had.co.nz/data-visualisation.html)
+ - Great textbook!
+
+[ggplot2 reference manual](https://ggplot2.tidyverse.org/reference/)
+ - really useful manual with pictures!

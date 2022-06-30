@@ -1,0 +1,236 @@
+---
+title: "HLC R Class - Day 2"
+author: "Brooke Felsheim, Ellen Risemberg, Elena Kharitonova"
+date: "6/9/2022"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# HLC Day 2: Plotting (and factors)
+
+Today we will be covering plotting in R using `ggplot2` and the `factor` data type. 
+
+By the end of today's class, you should be able to:     
+
+1. Understand basic `ggplot` syntax
+2. Know how `ggplot` views factors and how to relevel them for plotting
+
+## Load data into R
+
+For today's lecture, we will be using a dataset sourced from the [Gapminder Foundation](https://www.gapminder.org/) that contains data on life expectency, GDP per capita, and population by country. This dataset is available to use in R via a package called `gapminder`.     
+
+First, we will want to install the `gapminder` dataset so we can access this data.
+
+```{r eval=F}
+install.packages("gapminder")
+```
+
+Remember from last week that before a package can be used, it must be loaded to the current R environment with the `library` command. We need to do this once at the beginning of each new R session.    
+```{r}
+library(gapminder)
+```
+
+Loading this package makes a data frame called `gapminder` available in the R environment.      
+
+We will also need to load the `ggplot2` package for today's lesson.
+```{r message=FALSE}
+library(ggplot2)
+```
+
+For today's example, we will subset the data to make it simpler to work with. We will cover subsetting data in
+detail next week, but for now run the following code to generate a data frame tracking life-expectancy, population, & gdp over time in the United States.
+```{r}
+# We'll cover dplyr next week!
+usa <- dplyr::filter(gapminder, country == "United States")
+```
+
+Recall last class's lesson on ggplot. Do your best to complete the following exercises, referencing previous material or googling a solution as needed.
+
+### Exercise 1
+
+Create a scatterplot of life expectancy (`lifeExp`) over time (`year`) in the code chunk below.
+
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + geom_point()
+```
+
+### Exercise 2
+
+Change the point shape to diamonds and increase the point size to 5 in the code chunk below. Hint: Recall that setting parameters not-informed by data is done outside of an `aes()` call.
+
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point(shape = 18, size = 5)
+```
+
+## Layered grammar of graphics
+
+ggplot adds plot components in layers. The order of addition matters!      
+
+Let's add a line to our scatterplot. Observe that the line is plotted over the points.
+
+We've increased the line thickness with the `size` argument so it renders well on a projector.
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) +
+  geom_point(shape = 18, size = 5) +
+  geom_line(color = "red", size = 1)
+```
+
+### Exercise 3
+ 
+ Redo the above plot so that the points are on top of the line in the code chunk below.
+ 
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + 
+  geom_line(color = "red", size = 1) + 
+  geom_point(shape = 18, size = 5)
+```
+ 
+### Exercise 4
+
+Set the point size to scale with the population (`pop` column) in the code chunk below. 
+
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point(aes(size = pop))
+```
+
+What happens if you set the color to scale with the population?     
+
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point(mapping = aes(color = pop))
+```
+
+What happens if you set the color to distinguish points by continent?     
+
+```{r}
+ggplot(data = usa, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point(aes(color = continent))
+```
+
+## The factor data type
+
+Recall the following scatterplot we generated last class that colored points from the iris dataset by Species:      
+```{r}
+ggplot(iris, aes(Sepal.Width, Petal.Width)) +
+  geom_point(aes(color = Species))
+```
+
+ggplot interprets categorical variables as `factors` in order to assign their order in the legend, and the color on the plot.
+
+### Factors are *ordered categorical data* with "levels"   
+
+By default, the levels are in alphabetical order.
+
+Note how in the below example the 'levels' of `myFactors` are arranged alphabetically.
+```{r}
+myFactors <- factor(x = c("One", "Two", "Two", "Three"))
+
+myFactors
+```
+
+In the iris dataset, the data type of the `Species` column is already a factor:
+```{r}
+iris$Species
+```
+
+### Factors can have their order set on assignment
+
+```{r}
+myFactors2 <- factor(c("One", "Two", "Two", "Three"), levels = c("One", "Two", "Three"))
+
+myFactors2
+```
+
+### Factors can be also reordered once created
+
+To do this, use the `forcats` library! It's built for dealing with factors!
+```{r}
+library(forcats)
+```
+
+All forcats functions start with `fct_`.
+
+`fct_relevel` lets you reorder factors.
+
+Before reordering:
+```{r}
+myFactors
+```
+After reordering:
+```{r}
+fct_relevel(myFactors, c("One", "Two", "Three"))
+```
+
+`fct_rev` reverses the order of levels.     
+
+Before reversing:
+```{r}
+myFactors2
+```
+
+After reversing:
+```{r}
+fct_rev(myFactors2)
+```
+
+## ggplot customization with factors
+
+Again, recall the colored scatterplot we generated earlier:
+```{r}
+ggplot(iris, aes(Sepal.Width, Petal.Width)) +
+  geom_point(aes(color = Species))
+```
+
+The order of the factors in the legend (and thus the default color assignment) can be changed by reordering the factor levels!
+
+```{r}
+ggplot(iris, aes(Sepal.Width, Petal.Width)) +
+  geom_point(aes(color = fct_rev(Species)))
+```
+
+
+## Setting ggplot axis labels and title
+
+For these examples we will again use the data from the `gapfinder` package. This time, we will use the full dataset containing data for 142 countries. 
+
+Recall that we can save ggplots as a variable in R. Let's generate a scatterplot of life expectancy by year for all countries and save it to the variable `myPlot`. 
+
+```{r}
+myPlot <- ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp)) +
+    geom_point()
+
+myPlot
+```
+
+We can still make modifications to a ggplot that has been saved to a variable! We will modify the `myPlot` variable in the steps below.
+
+Titles can be added with `ggtitle()`:
+```{r}
+myPlot +
+  ggtitle("Year vs Life Expectancy")
+```
+
+Axis labels can be customized with `xlab()` and `ylab()`:
+```{r}
+myPlot +
+  ggtitle("Year vs Life Expectancy") +
+  xlab("Year") +
+  ylab("Life Expectancy")
+```
+
+Global aesthetics can be added to the whole plot:
+```{r}
+myPlot +
+  aes(color = continent)
+```
+
+
+
+
+

@@ -1,0 +1,93 @@
+---
+title: "HLC Day 3 Homework 3"
+author: "Brooke Felsheim, Elena Kharitonova, Ellen Risemberg"
+date: "6/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Homework 3
+
+During class today, we went over how to load your own data into R. For today's
+homework, we will practice saving a data frame as a new file.
+
+## Writing data frames to a file
+
+In homework 2, we used a subset of data from the `gapminder` library to generate
+a plot. Let's try saving this subsetted data frame to its own file in your local
+filesystem. Start by loading the gapminder library and creating the subsetted
+data frame by running the code below.
+
+```{r}
+library(gapminder)
+homeworkData <- dplyr::filter(gapminder, year %in% c(1952, 2007))
+```
+
+We will save two different versions of this file. First, we will save this as 
+a tab-separated text file. We can do this with the `write.table` function, which
+is similar to the `read.table` function, but instead of reading in a table, it
+writes a table to a file.
+
+### Write to .txt file
+
+Look at the help page for this function by typing `?write.table` in your R console.
+
+You'll see that the first argument (`x`) of `write.table` expects a matrix or data frame.
+The second argument (`file`) is where you can specify the file path and name. The other arguments change different characteristics about the way the file is saved. We may
+want to override the default arguments for these.
+
+NOTE: before saving a new file, check where your current working directory is with
+`getwd()`. This is where the file will be saved if you do not specify a full path.
+You can change this to a different directory using `setwd()` as we discussed in class,
+or navigating to the folder you would like to use in the bottom right corner of your 
+R Studio panel and selecting "More" -> "Set as Working Directory". In an R Markdown
+file, the working directory defaults to the directory that the .Rmd file is saved in.
+
+```{r eval=FALSE}
+getwd()
+setwd(dir = ) # set working directory to another location if desired
+```
+
+First, let's try writing to a tab separated text file using the default parameters.
+
+```{r eval=FALSE}
+write.table(x = homeworkData, file = "homework_3_data.txt", sep = "\t")
+```
+
+If you open the saved text file, you'll see that the row numbers of the data frame
+were saved. You'll also see that all character values are output with quotes
+around them. If you don't want the row values and/or these quotes, you can 
+overwrite some of the default arguments in R. Hint: see `row.names` and `quote`
+in the `write.table` help page.
+
+Try saving the file again to "homework_3_data_2.txt", but without row names 
+and quotes in the R chunk below.
+
+```{r eval=FALSE}
+write.table(x = homeworkData, file = "homework_3_data.txt", sep = "\t",
+            row.names = F, quote = F)
+```
+
+### Write to .csv file
+
+Now try writing the homework data to a .csv file called "homework_3_data.csv". Try doing this yourself using the `write.table` function and setting `sep = ","` in the R chunk
+below. Try removing the row names and the quotes as you did for the .txt file. 
+
+```{r eval=FALSE}
+write.table(x = homeworkData, file = "homework_3_data.csv", sep = ",",
+            row.names = F, quote = F)
+```
+
+Note: you can also write as a .csv file using `write.csv` function. Try writing the
+data again to a csv file called "homework_3_data_2.csv", but using `write.csv` in 
+the R chunk below. 
+
+```{r eval=FALSE}
+write.csv(x = homeworkData, file = "homework_3_data_2.csv",
+          row.names = F, quote = F)
+```
+
+
